@@ -1,8 +1,9 @@
 const express = require("express")
 const app = express();
 const session = require("express-session");
-const FileStore = require('session-file-store')(session);
-const mongo = require("./utils/mongo");
+const MongoStore = require('connect-mongo');
+const bodyParser = require("body-parser");
+const db = require('./utils/db');
 const path = require("path");
 const cors = require("cors");
 const favicon = require('serve-favicon');
@@ -11,23 +12,32 @@ const utils = require("./utils/utils")
 const fs = require("fs");
 require('dotenv').config();
 
-app.use( favicon(__dirname + "/public/resources/icon.ico") );
-
-//cors
-if(process.env?.CORS === "true") app.use(cors());
+/*
+dbPrivateKey: este campo hace que los datos guardados en ciertas colecciones de documentos en la base de datos sean solo accesibles para usuarios logueados para la misma compania.
+EJ los productos de "el coloso sa" solo son accesibles por "el coloso sa" ya que al iniciar sesion "req.session.companyId" asegura que las consultas a base de datos sean con dicho filtro.
+para esto se debe consultar la base de datos mediante req.privateQuery(model).find (create, updateOne, delete, etc)
+*/
+const dbPrivateKey = "companyId";
 
 //sessions
 app.use(session({
-    secret: (process.env?.SESSION_SECRET || utils.getRandomString(24)),
+    secret: process.env?.SESSION_SECRET,
     resave: true,
     saveUninitialized: false,
     cookie: {
         maxAge : Number(process.env?.SESSION_MAXAGE) || (1000 * 60 * 60 * 24 * 5),//5 días
+        sameSite: true,
         //secure : !(process.env.NODE_ENV == 'development') // true ssl
-        //sameSite: 'none'
     },
-    store: new FileStore({logFn: function(){}})//loFn: ... es para q no joda buscando sessiones q han sido cerradas
+    store: MongoStore.create({ mongoUrl: process.env.MONGO_SESSION_URI })
 }));
+
+app.use( favicon(__dirname + "/public/resources/icon.ico") );
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+//cors
+if(process.env?.CORS === "true") app.use(cors());
 
 //motor de templates
 app.set("view engine", "ejs");
@@ -37,48 +47,22 @@ app.use("/css", express.static( path.join(__dirname, "/public/css") ));
 app.use("/js", express.static( path.join(__dirname + "/public/js") ));
 app.use("/resources", express.static( path.join(__dirname + "/public/resources") ));
 
+//conecta a la base de datos y cargo los modelos
+let conn = null;
+db().then(ret=>{ 
+    conn = ret; 
+    conn.model('User', require("./models/user-model.js"));
+    conn.model('Client', require("./models/client-model.js"));
+    conn.model('Company', require("./models/company-model.js"));
+    conn.model('Config', require("./models/config-model.js"));
+})
 
 //middlewares
 app.use((req, res, next)=>{
-    //verifica sesion y permisos (retorna true si todo esta OK)
-    /*
-        levels= 
-        0 visitante - no inicio sesion
-        1 usuario normal -inicio sesion
-        2 usuario administrador - inicio sesion y es administrador de su suscripcion
-        3 super usuario - administrador del cloud (mathias)
-    */
-    req.checkPermissions = (req, {level=0, permission=null, redirect=null}=null) => {
-        try{
-            if(typeof level === "number"){//verifico q este completado el parametro nivel
-                if(level === 3){
-                    if(req?.session?.email != "mathias.b@live.com.ar") throw "Usted no es Mathias.";
-                }else if(level === 2){
-                    if( Number(req?.session?.level) !== 2 ) throw "El usuario no tiene el NIVEL necesario para realizar esta acción.";
-                    if(permission && req.session.permissions.includes("*") == false && req.session.permissions.includes(permission) == false) throw "El usuario no tiene los PERMISOS necesarios para realizar esta acción.";
-                }else if(level === 1){
-                    if( Number(req?.session?.level) !== 1 ) throw "El usuario no tiene el NIVEL necesario para realizar esta acción.";
-                    if(permission && req.session.permissions.includes("*") == false && req.session.permissions.includes(permission) == false) throw "El usuario no tiene los PERMISOS necesarios para realizar esta acción.";
-                }else{
-                    //level 0 no valida nada
-                }
-            }
-            return true;
-        }catch(err){
-            if(redirect === null){
-                res.status(200).json({error: true, message: err.toString()});
-                res.end();
-                return false;
-            }else{
-                res.redirect(redirect);
-                res.end();
-                return false;
-            }
-        }
-    }
+    
     //guarda en log para auditorias futuras
     req.writeLog = async (req, message, error=false) => {
-        await fs.promises.appendFile('./log.txt', `${fechas.getNow(true)} [${error ? 'ERROR' : ''}] => ${req.path} => ${message}`);
+        await fs.promises.appendFile('./log.txt', `${fechas.getNow(true)} [${error ? 'ERROR' : ''}] => ${(req?.session?.userId || 0)}@${req.path} => ${message}`);
     }
     //redirecciona al home
     req.goHome = (res) =>{
@@ -86,37 +70,63 @@ app.use((req, res, next)=>{
         res.end();
         return;
     }
-    //devuelve un mensaje de error al browser
-    req.returnError = (res, message) => {
-        res.status(200).json({error: true, message: message});
-        res.end();
-        return;
+    //completar aquí con el script que recupere la informacion primordial para el uso del sistema.
+    req.getPrimordial = async (req, res) => {
+        let data = {
+            fx: fechas.getNow(true),
+        };
+        
+        return data;
     }
+    //asegura consultas a base de datos basadas con filtro por dbPrivateKey (companyId) 
+    req.privateQuery = (model) => {
+        const modelInstance = conn.models[model];
+
+        if (!modelInstance) {
+            throw new Error(`El modelo ${model} no existe`);
+        }
+
+        return {
+            countDocuments: (query, ...args) => modelInstance.countDocuments({[dbPrivateKey]: req.session[dbPrivateKey],...query}, ...args),
+            find: (query, ...args) => modelInstance.find({ [dbPrivateKey]: req.session[dbPrivateKey], ...query }, ...args),
+            findOne: (query, ...args) => modelInstance.findOne({ [dbPrivateKey]: req.session[dbPrivateKey], ...query }, ...args),
+            create: (data) => modelInstance.create({[dbPrivateKey]: req.session[dbPrivateKey], ...data}, ...args),
+            findOneAndUpdate: (query, update, ...args) => {
+                delete update[dbPrivateKey];
+                return modelInstance.findOneAndUpdate({ [dbPrivateKey]: req.session[dbPrivateKey], ...query }, update, ...args);
+            },
+            updateOne: (query, update, ...args) => {
+                delete update[dbPrivateKey];
+                modelInstance.updateOne({ [dbPrivateKey]: req.session[dbPrivateKey], ...query }, update, ...args);
+            },
+            deleteOne: (query, ...args) => modelInstance.deleteOne({ [dbPrivateKey]: req.session[dbPrivateKey], ...query }, ...args),
+        }
+    };
+    //permite conexiones sin filtro a base de datos
+    req.publicQuery = (model) => {
+        const modelInstance = conn.models[model];
+        
+        if (!modelInstance) {
+            throw new Error(`El modelo ${model} no existe`);
+        }
+
+        return {
+            countDocuments: (query, ...args) => modelInstance.countDocuments(...query, ...args),
+            find: (query, ...args) => modelInstance.find(...query, ...args),
+            findOne: (query, ...args) => modelInstance.findOne(...query, ...args),
+            create: (data) => modelInstance.create(data),
+            findOneAndUpdate: (query, update, ...args) => modelInstance.findOneAndUpdate(...query, update, ...args),
+            updateOne: (query, update, ...args) => modelInstance.updateOne(...query, update, ...args),
+            deleteOne: (query, ...args) => modelInstance.deleteOne(...query, ...args),
+        }
+    };
+    //conexion directa a la base de datos
+    req.mongoDB = conn;
     next();
 })
 
-
-//<!--CONFIGURAR ACCESO SEGURO A DATOS AQUÍ-->
-/* 
-    Al ejecutar una consulta en un modelo marcado con "*", el middleware añadirá automáticamente la palabra de filtro en la consulta. Comparará este valor con req.session[filtro], asegurando que solo se acceda y manipule la información asociada a la empresa actual del usuario.
-    Ej.
-    models={
-        "ConfiguracionGlobal": ..., // Datos accesibles por todos los usuarios
-        "PreciosGenerales": ...,    // Datos accesibles por todos los usuarios
-        "*Productos": ...,          // Datos restringidos al cliente autenticado
-        "*Clientes": ...,           // Datos restringidos al cliente autenticado
-    }
-*/
-const models = {
-    Users: require("./models/user-model"),
-    "*Clients": require("./models/client-model"),
-    "*Configs": require("./models/config-model"),
-}
-app.use(mongo.safeQueryMiddleware(models, "companyId"));
-
 //routes
 app.use(require("./routes/user-routes"));
-
 
 //ping para control
 app.get("/ping", (req, res)=>{
@@ -126,8 +136,19 @@ app.get("/ping", (req, res)=>{
 
 //manejo de index
 app.get("/", (req, res)=>{
-    const index = path.join(__dirname, "views", "html", "index.html");
-    res.status(200).sendFile(__dirname + "/views/html/index.html")
+    if(Object.keys(req.query).includes("just-login")){
+        const indexJustLogin = path.join(__dirname, "views", "html", "index-just-login.html");
+        res.status(200).sendFile(indexJustLogin)
+    }else{
+        const indexLandingPage = path.join(__dirname, "views", "html", "index-landing-page.html");
+        res.status(200).sendFile(indexLandingPage)
+    }
+})
+
+//retorna informacion basica para el uso general. Ej fecha, permisos de usuario, configuracion general
+app.get("/primordial", async (req, res)=>{
+    let resp = await req.getPrimordial();
+    res.status(200).json(resp);
 })
 
 //manejo de 404
@@ -137,6 +158,6 @@ app.use((req, res, next) => {
 })
 
 //inicio el servidor
-app.listen(Number(process.env.PORT), ()=>{
+app.listen(Number(process.env.PORT), async ()=>{
     console.log("Escuchando en http://localhost:" + process.env.PORT)
 })

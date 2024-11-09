@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt");
 const fs = require("fs");
 const path = require("path");
 const { add } = require('node-7z');
+const FormData = require("form-data");
 
 function encryptString(str, prefix=false){
     str = str.toString().trim();
@@ -70,10 +71,12 @@ function validateString(str, validator){
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     const uuidRegex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
     const ipRegex = /^(\d{1,3}\.){3}\d{1,3}$/;
+    const objectIdRegex = /^[0-9a-fA-F]{24}$/;
 
     if(validator == "email" || validator == "mail") return emailRegex.test(str);
     else if(validator == "uuid" || validator == "guid") return uuidRegex.test(str);
     else if(validator == "ip") return ipRegex.test(str);
+    else if (validator === "objectId" || validator === "oid") return objectIdRegex.test(str);
     else return null;
 }
 function encryptFile(finalPath, filePath) {
@@ -133,6 +136,31 @@ function safeString(str, remove = ["`", "´", "'", '"']){
     })
     return str;
 }
+async function uploadFile({file, localPath, }){
+    try{
+        if(filesMateflix){
+            const formData = new FormData();
+            formData.append('GLOBAL_PATH', "/public/mateflix.app/imagenes-productos");
+            formData.append('privateKey', process.env.CDN_MATEFLIX_PRIVATE_KEY);
+            formData.append('file', fs.createReadStream(req.files.archivo.path));
+            formData.append('newName', emp._id + "_" + req.files.archivo.name);
+            formData.append('irrepetible', "1");
+    
+            const response = await fetch(urlFilesMateflix, {
+                method: "POST",
+                data: formData,
+                headers: { ...formData.getHeaders() },
+            })
+            return response?.data?.newFiles?.[0] || null;//retorna la ruta del archivo
+        }else{
+    
+        }
+
+    }catch(err){
+        console.log("utils.uploadFile ERROR: ", err );
+        return null;
+    }
+}
 module.exports = {
     encryptString,
     decryptString,
@@ -145,5 +173,6 @@ module.exports = {
     encryptFile,
     downloadFile,
     api,
-    safeString
+    safeString,
+    uploadFile
 };

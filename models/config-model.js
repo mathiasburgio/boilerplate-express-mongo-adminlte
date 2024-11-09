@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 
 const configSchema = new mongoose.Schema({
-    //companyId: mongoose.Types.ObjectId, //para casos en los cuales el servicio se brinda a companias y no a usuarios individuales. Ej mateflix tiene la propiedad "emprendimientoId" (eid)
-    properties: mongoose.Types.Mixed
-});
+    companyId: mongoose.Schema.Types.ObjectId, //para casos en los cuales el servicio se brinda a companias y no a usuarios individuales. Ej mateflix tiene la propiedad "emprendimientoId" (eid)
+    //userId: mongoose.Schema.Types.ObjectId, //cuando la configuracion es del usuario
+    properties: mongoose.Schema.Types.Mixed
+}, { timestamps: true });
 
-const Config = mongoose.model('Config', configSchema);
-module.exports = Config;
+module.exports = configSchema;

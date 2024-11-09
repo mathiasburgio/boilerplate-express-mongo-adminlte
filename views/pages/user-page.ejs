@@ -1,0 +1,33 @@
+<div id="user">
+    <div class="card">
+        <div class="card-body">
+            <button class="btn btn-flat btn-success" name="crear-usuario">Crear usuario</button>
+            <table class="table table-sm">
+                <thead class="tead-dark">
+                    <tr>
+                        <th>Email</th>
+                        <th>Contraseña</th>
+                        <th>Admin</th>
+                        <th>Permisos</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div id="user-modals">
+    <template id="">
+
+    </template> 
+</div>
+
+<script src="/js/user.js"></script>
+<script>
+    var user;
+    window.onload = () => {
+        boilerplate();
+        user = new User();
+    }
+</script>

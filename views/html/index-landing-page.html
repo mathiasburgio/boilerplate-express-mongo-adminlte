@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>boilerplate</title>
+    <link rel="stylesheet" href="/resources/cdn/adminlte/css/adminlte.min.css">
+    <link rel="stylesheet" href="/resources/cdn/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/resources/cdn/font-awesome-6.6.0/css/all.min.css">
+    <link rel="stylesheet" href="/resources/cdn/font-awesome-6.6.0/css/brands.min.css">
+    <link rel="stylesheet" href="/resources/cdn/sweetalert2/sweetalert2.min.css">
+    <link rel="stylesheet" href="/resources/cdn/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
+    <link rel="stylesheet" href="/css/main.css">
+    <style>
+        html, body{
+            padding: 0;
+            overflow-x: hidden;
+        }
+        main nav{
+            position: absolute;
+            width: 90%;
+            left: 5%;
+            top:15px;
+        }
+        .hero{
+            min-height: 100vh;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.3),rgba(0, 0, 0, 0.5)), url("/resources/bg-hero.jpg");
+            background-position: center;
+            background-size: cover;
+        }
+        .pricing-v1 [name='price']{
+            font-weight: bold;
+            font-size: 2rem;
+        }
+        .pricing-v2 .bg-1{
+            background-color: rgba(17, 27, 163, 0.8);
+        }
+        .pricing-v2 .bg-2{
+            background-color: rgba(17, 26, 163, 1);
+        }
+        .pricing-v2 ul{
+            list-style: none;
+        }
+        .pricing-v2 li{
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container-fluid p-0">
+        <header class="d-none">
+            <!--
+            en caso de querer tener el nav en otra etiqueta.
+            tambien sirve para agregar una promocion o algo
+            -->
+        </header>
+        <main>
+            <div class="container" style="position: relative;">
+                <nav class="d-flex justify-content-between align-items-center rounded-pill bg-glass mt-3 py-3 px-4 shadow-sm">
+                    <span class="nav-left">
+                        <span  style="width: 32px; height: 32px;" class="rounded-circle"></span> Mathias Burgio
+                    </span>
+                    <span class="nav-center">
+                        <span class="mx-1"><a href="#" scroll-to="how-it-works">How it works</a></span>
+                        <span class="mx-1"><a href="#" scroll-to="prices">Prices</a></span>
+                        <span class="mx-1"><a href="/?just-login">index v2</a></span>
+                    </span>
+                    <span class="nav-right">
+                        <button class="btn btn-sm btn-success mx-1" name="registry">Registrarme</button>
+                        <button class="btn btn-sm btn-primary mx-1" name="login">Iniciar sesión</button>
+                    </span>
+                </nav>
+            </div>
+            <article class="hero d-flex justify-content-center align-items-center">
+                <span class="text-center text-white">
+                    <h2 class="mb-3">¿Problemas con la gestión de tu comercio?</h2>
+                    <h5 class="mb-2">Potencia tu negocio con nuestro sistema de gestión</h5>
+                    <button class="btn btn-success">LO QUIERO YA <i class="fas fa-rocket"></i></button>
+                </span>
+            </article>
+            <article class="panel-1"></article>
+            <article class="panel-2"></article>
+            <article class="panel-3"></article>
+            <article class="pricing-v1 py-5">
+                <div class="container">
+                    <h2 class="mb-3 text-center">Prices v1</h2>
+                    <div class="h-scroll">
+                        <table class="table table-borderless text-center">
+                            <tbody>
+                                <tr>
+                                    <td></td>
+                                    <td class="bg-danger">Starter</td>
+                                    <td class="bg-info">Essential</td>
+                                    <td class="bg-warning">Professional</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div>Select your plan</div>
+                                        <i class="fas fa-circle-arrow-right"></i>
+                                    </td>
+                                    <td class="text-center text-danger">
+                                        <div name="price">
+                                            $10
+                                        </div>
+                                        <div>
+                                            <small>month</small><br>
+                                            <span class="text-dark">Contratación anual</span>
+                                        </div>
+                                        <button class="btn btn-outline-danger">Contratar</button>
+                                    </td>
+                                    <td class="text-center text-info" style="position: relative;">
+                                        <span class="badge badge-success" style="position: absolute; top: 5px; right: 5px;">Popular</span>
+                                        <div name="price">
+                                            $22
+                                        </div>
+                                        <div>
+                                            <small>month</small><br>
+                                            <span class="text-dark">Contratación anual</span>
+                                        </div>
+                                        <button class="btn btn-outline-info">Contratar</button>
+                                    </td>
+                                    <td class="text-center text-warning">
+                                        <div name="price">
+                                            $35
+                                        </div>
+                                        <div>
+                                            <small>month</small><br>
+                                            <span class="text-dark">Contratación anual</span>
+                                        </div>
+                                        <button class="btn btn-outline-warning">Contratar</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-left font-weight-bold">
+                                        Gestión comercial
+                                    </td>
+                                    <td>
+                                        <i class="fas fa-circle-check text-danger fa-lg"></i>
+                                    </td>
+                                    <td>
+                                        <i class="fas fa-circle-check text-info fa-lg"></i>
+                                    </td>
+                                    <td>
+                                        <i class="fas fa-circle-check text-warning fa-lg"></i>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-left font-weight-bold">
+                                        Tienda virtual / carta QR
+                                    </td>
+                                    <td>
+                                        <i class="fas fa-circle-xmark text-secondary fa-lg"></i>
+                                    </td>
+                                    <td>
+                                        <i class="fas fa-circle-check text-info fa-lg"></i>
+                                    </td>
+                                    <td>
+                                        <i class="fas fa-circle-check text-warning fa-lg"></i>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-left font-weight-bold">
+                                        Facturación electronica
+                                    </td>
+                                    <td>
+                                        <i class="fas fa-circle-xmark text-secondary fa-lg"></i>
+                                    </td>
+                                    <td>
+                                        <i class="fas fa-circle-check text-info fa-lg"></i>
+                                    </td>
+                                    <td>
+                                        <i class="fas fa-circle-check text-warning fa-lg"></i>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-left font-weight-bold">
+                                        Funciones especiales <i class="fas fa-circle-question fa-lg cp"></i>
+                                    </td>
+                                    <td>
+                                        <i class="fas fa-circle-xmark text-secondary fa-lg"></i>
+                                    </td>
+                                    <td>
+                                        <i class="fas fa-circle-xmark text-secondary fa-lg"></i>
+                                    </td>
+                                    <td>
+                                        <i class="fas fa-circle-check text-warning fa-lg"></i>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </article>
+            <article class="pricing-v2">
+                <div class="container">
+                    <h2 class="mb-3 text-center">Prices v2</h2>
+                    <div class="h-scroll">
+                        <div class="row">
+                            <div class="col">
+                                <div class="card rounded-0 bg-1 text-center text-white">
+                                    <div class="card-body py-3">
+                                        <h5 style="font-size: 2.5rem;">Free</h5>
+                                        <p style="font-size: 1rem;">Prueba</p>
+                                        <div class="bg-2 my-3 py-3" style="font-size: 3rem;">
+                                            $10 <small style="font-size: 1.5rem;">/month</small>
+                                        </div>
+                                        <ul class="text-left" style="list-style: none;">
+                                            <li>
+                                                <i class="fas fa-store"></i> gestión comercial
+                                            </li>
+                                            <li class="text-secondary tachado">
+                                                <i class="fas fa-earth-americas"></i> tienda virtual
+                                            </li>
+                                            <li class="text-secondary tachado">
+                                                <i class="fas fa-file-invoice-dollar"></i> facturación electronica
+                                            </li>
+                                        </ul>
+                                        <button class="btn btn-flat btn-primary btn-block m-auto" style="width: 90%;">Elegir plán</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="card rounded-0 bg-1 text-center text-white">
+                                    <div class="card-body py-3">
+                                        <h5 style="font-size: 2.5rem;">Inicial</h5>
+                                        <p style="font-size: 1rem;">comercios pequeños</p>
+                                        <div class="bg-2 my-3 py-3" style="font-size: 3rem;">
+                                            $10 <small style="font-size: 1.5rem;">/month</small>
+                                        </div>
+                                        <ul class="text-left" style="list-style: none;">
+                                            <li>
+                                                <i class="fas fa-store"></i> gestión comercial
+                                            </li>
+                                            <li class="text-secondary tachado">
+                                                <i class="fas fa-earth-americas"></i> tienda virtual
+                                            </li>
+                                            <li class="text-secondary tachado">
+                                                <i class="fas fa-file-invoice-dollar"></i> facturación electronica
+                                            </li>
+                                        </ul>
+                                        <button class="btn btn-flat btn-primary btn-block m-auto" style="width: 90%;">Elegir plán</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="card rounded-0 bg-1 text-center text-white" style="position: relative;">
+                                    <div class="card-body py-3">
+                                        <div class="bg-success text-white p-2" style="position: absolute; top:0; right: 0;">más popular</div>
+                                        <h5 style="font-size: 2.5rem;">Profesional</h5>
+                                        <p style="font-size: 1rem;">comercios medianos</p>
+                                        <div class="bg-2 my-3 py-3" style="font-size: 3rem;">
+                                            $10 <small style="font-size: 1.5rem;">/month</small>
+                                        </div>
+                                        <ul class="text-left" style="list-style: none;">
+                                            <li>
+                                                <i class="fas fa-store"></i> gestión comercial
+                                            </li>
+                                            <li>
+                                                <i class="fas fa-earth-americas"></i> tienda virtual
+                                            </li>
+                                            <li>
+                                                <i class="fas fa-file-invoice-dollar"></i> facturación electronica
+                                            </li>
+                                        </ul>
+                                        <button class="btn btn-flat btn-primary btn-block m-auto" style="width: 90%;">Elegir plán</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="card rounded-0 bg-1 text-center text-white">
+                                    <div class="card-body py-3">
+                                        <h5 style="font-size: 1.5rem;">Distribuidora & distribuidora</h5>
+                                        <p style="font-size: 1rem;">comercios medianos</p>
+                                        <div class="bg-2 my-3 py-3" style="font-size: 3rem;">
+                                            $10 <small style="font-size: 1.5rem;">/month</small>
+                                        </div>
+                                        <ul class="text-left" style="list-style: none;">
+                                            <li>
+                                                <i class="fas fa-store"></i> gestión comercial
+                                            </li>
+                                            <li>
+                                                <i class="fas fa-earth-americas"></i> tienda virtual
+                                            </li>
+                                            <li>
+                                                <i class="fas fa-file-invoice-dollar"></i> facturación electronica
+                                            </li>
+                                            <li>
+                                                <i class="fas fa-user-astronaut"></i> funciones especiales
+                                            </li>
+                                        </ul>
+                                        <button class="btn btn-flat btn-primary btn-block m-auto" style="width: 90%;">Elegir plán</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </main>
+        <footer class="border-top py-3 bg-light">
+            <div class="row">
+                <div class="col-sm-3">
+                    <b><i class="fas fa-hippo fa-lg text-primary"></i> Boilerplate</b>
+                    <p>
+                        Aquí agrega una descripción breve de lo que hace el sitio, cuales son los grandes beneficios que trae y por que deberian utilizar sus servicios.
+                    </p>
+                    <div class="text-muted">Copyright © 2024 - Todos los derechos reservados</div>
+                </div>
+                <div class="col-sm-3">
+                    <h4>ENLACES</h4>
+                    <ul>
+                        <li><a href="#">Inicio</a></li>
+                        <li><a href="#">Precios</a></li>
+                        <li><a href="#">Funciones</a></li>
+                        <li><a href="#">Seguridad</a></li>
+                        <li><a href="#">Rendimiento</a></li>
+                        <li><a href="#">Iniciar sesión</a></li>
+                        <li><a href="#">Descargas</a></li>
+                    </ul>
+                </div>
+                <div class="col-sm-3">
+                    <h4>LEGAL</h4>
+                    <ul>
+                        <li><a href="#">Términos y condiciones de uso</a></li>
+                        <li><a href="#">Politicas de privacidad</a></li>
+                    </ul>
+                </div>
+                <div class="col-sm-3">
+                    <h4>MAS INFO</h4>
+                    <ul>
+                        <li><a href="#">Sobre nosotros</a></li>
+                        <li><a href="#">Otro servicio</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Socios</a></li>
+                        <li><a href="#">Contacto</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-7">
+                    <span  style="width: 32px; height: 32px;" class="rounded-circle"></span> Mathias Burgio
+                </div>
+                <div class="col-sm-5 text-right">
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <div id="modals">
+        <template id="login-modal">
+            <div class="form-group">
+                <label for="">Email</label>
+                <input type="email" class="form-control" autocomplete="off" name="email">
+            </div>
+            <div class="form-group">
+                <label for="">password</label>
+                <div class="input-group">
+                    <input type="password" class="form-control" autocomplete="off" name="password">
+                    <div class="input-group-append">
+                        <button class="btn btn-light border"><i class="fas fa-eye-slash"></i></button>
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-primary" name="login">Login</button>
+        </template>
+        <template id="registry-modal">
+            <div class="form-group">
+                <label for="">Company name</label>
+                <input type="text" class="form-control" autocomplete="off" name="companyName">
+            </div>
+            <div class="form-group">
+                <label for="">Email</label>
+                <input type="email" class="form-control" autocomplete="off" name="email">
+            </div>
+            <div class="form-group">
+                <label for="">password</label>
+                <div class="input-group">
+                    <input type="password" class="form-control" autocomplete="off" name="password">
+                    <div class="input-group-append">
+                        <button class="btn btn-light border"><i class="fas fa-eye-slash"></i></button>
+                    </div>
+                </div>
+            </div>
+            <p class="bg-light p-1">
+                <small>Al hacer clic en <b>registrarme</b> aceptas que haz leido nuestros <a href="#">términos y condiciones de uso</a> y estas de acuerdo con ellos.</small>
+            </p>
+            <button class="btn btn-primary" name="registry">Registrarme</button>
+        </template>
+        <template id="reset-password-modal">
+            <div class="alert alert-info">
+                Ingresa tu email y haz clic en <b>restablecer contraseña</b> y te enviaremos un correo para que puedas cambiar tu contraseña de inicio de sesión.
+                <br>
+                El email puede demorar unos minutos en llegar a tu casilla; es aconsejable verificar el buzón de <b>spam / correo no deseado</b>
+            </div>
+            <div class="form-group">
+                <label for="">Email</label>
+                <input type="email" class="form-control" autocomplete="off" name="email">
+            </div>
+            <button class="btn btn-primary" name="reset-password">restablecer contraseña</button>
+        </template>
+    </div>
+    <script src="/resources/cdn/jquery-3.7.1.min.js"></script>
+    <script src="/resources/cdn/bootstrap/js/popper.min.js"></script>
+    
+    <script src="/resources/cdn/adminlte/js/adminlte.min.js"></script>
+    <script src="/resources/cdn/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/resources/cdn/sweetalert2/sweetalert2.all.min.js"></script>
+    
+    <script src="/resources/Fechas.js"></script>
+    <script src="/resources/Modal.js"></script>
+    <script src="/resources/Utils.js"></script>
+    <script src="/resources/Menu.js"></script>
+    <script src="/js/index-landing-page.js"></script>
+    <script>
+        var fechas, modal, utils, menu, indexLandingPage;        
+        window.onload = () => {
+            fechas = new Fechas();
+            modal = new Modal();
+            utils = new Utils();
+            menu = new Menu();
+            indexLandingPage = new IndexLandingPage();
+        }
+    </script>
+</body>
+</html>

@@ -33,7 +33,7 @@ class Menu{
     }
     playSound(name, force=false){
         if(!this.sounds && force == false) return;
-
+        $("")
     }
     toast(level, title, message, sound=true){
         Swal.fire({

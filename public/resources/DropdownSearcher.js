@@ -18,11 +18,11 @@ class DropdownSearcher{
                     <li class="list-group-item">
                         <input type="search" class="form-control form-control-sm" placeholder="Buscar...">
                     </li>
-                    <li class="list-group-item list-group-item-action p-1 cp d-none">Item 1</li>
-                    <li class="list-group-item list-group-item-action p-1 cp d-none">Item 2</li>
-                    <li class="list-group-item list-group-item-action p-1 cp d-none">Item 3</li>
-                    <li class="list-group-item list-group-item-action p-1 cp d-none">Item 4</li>
-                    <li class="list-group-item list-group-item-action p-1 cp d-none">Item 5</li>
+                    <li class="list-group-item list-group-item-action p-1 cp d-none text-dark">Item 1</li>
+                    <li class="list-group-item list-group-item-action p-1 cp d-none text-dark">Item 2</li>
+                    <li class="list-group-item list-group-item-action p-1 cp d-none text-dark">Item 3</li>
+                    <li class="list-group-item list-group-item-action p-1 cp d-none text-dark">Item 4</li>
+                    <li class="list-group-item list-group-item-action p-1 cp d-none text-dark">Item 5</li>
                 </ul>`;
         input.parent().append(fox);
 

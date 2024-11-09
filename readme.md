@@ -42,7 +42,7 @@
     ### 8.1 Configuración del Modelo de Usuarios (user-model)
     
     Si el proyecto es para múltiples compañías o clientes, asegura que la información sea accesible solo para usuarios de la misma compañía. Para esto:
-    - Descomenta `companyId` en el modelo.
+    - Descomenta `companyId` en el modelo `models/user-model` y haz los cambios necesarios en `controllers/user-controller`.
     - Incluye `companyId` en todos los modelos que almacenen datos privados de cada compañía o cliente.
     
     **Nota:** Puedes usar otro nombre para `companyId`, por ejemplo, en Mateflix se utiliza `emprendimientoId` o `eid`.
@@ -69,7 +69,7 @@
 
     - Para consultas seguras, el middleware aplicará automáticamente el filtro `companyId`:
     ```javascript
-    // Acceso seguro
+    // Acceso seguro Ej. query => {nombre: "alguien"} ~ {companyId: req.session.companyId, nombre: "alguien"}
     req.mongoQuery(query) // o req.mongoQuery(query, update).sort().limit();
     // Acceso inseguro
     req.unsafeMongoQuery(query)
@@ -77,7 +77,7 @@
 
     ### 8.3 Configuración de Data Primordial
 
-    - Usa el middleware `getPrimordial` para retornar la información básica del sistema (ej., datos del comercio, usuario, y configuración).
+    - Edita el middleware `getPrimordial` para obtener la información básica del sistema (ej., datos del comercio, usuario, y configuración) y utilizalo cuando lo necesites mediante `req.getPrimordial` ó bien mediante `curl -X GET https://<tu-dominio>/get-primordial`.
 
 ## Tareas Pendientes
 

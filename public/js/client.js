@@ -95,10 +95,10 @@ class Client{
         if (data.nombre.length < 3) { modal.mensaje("Nombre no válido"); return; }
         data.limiteCta = h.decimales(data.limiteCta || 0) || 0;
         
-        console.log(data)
+        
         await modal.esperando2("Guardando...");
         let ret = await $.post({
-            url: "/app/clientes/guardar-cliente",
+            url: "/client/save",
             data: data  
         })
 
@@ -110,6 +110,8 @@ class Client{
                 }
                 this.crud.afterSave(data);
                 this.crud.search("");
+
+                menu.toast("success", "Cliente", "Cliente guardado con éxito")
     
                 Swal.fire({
                     icon: 'success',
