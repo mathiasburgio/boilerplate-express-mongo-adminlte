@@ -414,7 +414,7 @@ var Modal = function(){
             })
         });
     }
-    this.esperando2 = (txt) =>{
+    this.asyncEsperando = (txt) =>{
         return new Promise(resolve=>{
             clase.mostrar({
                 titulo : false,

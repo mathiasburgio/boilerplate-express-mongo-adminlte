@@ -59,10 +59,9 @@ db().then(ret=>{
 
 //middlewares
 app.use((req, res, next)=>{
-    
     //guarda en log para auditorias futuras
     req.writeLog = async (req, message, error=false) => {
-        await fs.promises.appendFile('./log.txt', `${fechas.getNow(true)} [${error ? 'ERROR' : ''}] => ${(req?.session?.userId || 0)}@${req.path} => ${message}`);
+        await fs.promises.appendFile('./log.txt', `\n${fechas.getNow(true)} [${error ? 'ERROR' : ''}] => ${(req?.session?.userId || 0)}@${req.path} => ${message}`);
     }
     //redirecciona al home
     req.goHome = (res) =>{
@@ -71,10 +70,17 @@ app.use((req, res, next)=>{
         return;
     }
     //completar aquí con el script que recupere la informacion primordial para el uso del sistema.
-    req.getPrimordial = async (req, res) => {
+    req.getPrimordial = async (req) => {
         let data = {
             fx: fechas.getNow(true),
         };
+        if(req.session?.data){
+            data.email = req.session.data.email;
+            data.isAdmin = req.session.data.isAdmin;
+            data.child = req.session.data.child;
+            data.permissions = req.session.data.permissions;
+            data.companyId = req.session.data.companyId;
+        }
         
         return data;
     }
@@ -87,45 +93,33 @@ app.use((req, res, next)=>{
         }
 
         return {
-            countDocuments: (query, ...args) => modelInstance.countDocuments({[dbPrivateKey]: req.session[dbPrivateKey],...query}, ...args),
-            find: (query, ...args) => modelInstance.find({ [dbPrivateKey]: req.session[dbPrivateKey], ...query }, ...args),
-            findOne: (query, ...args) => modelInstance.findOne({ [dbPrivateKey]: req.session[dbPrivateKey], ...query }, ...args),
-            create: (data) => modelInstance.create({[dbPrivateKey]: req.session[dbPrivateKey], ...data}, ...args),
+            countDocuments: (query, ...args) => modelInstance.countDocuments({[dbPrivateKey]: req.session.data[dbPrivateKey],...query}, ...args),
+            find: (query, ...args) => modelInstance.find({ [dbPrivateKey]: req.session.data[dbPrivateKey], ...query }, ...args),
+            findOne: (query, ...args) => modelInstance.findOne({ [dbPrivateKey]: req.session.data[dbPrivateKey], ...query }, ...args),
+            create: (data) => modelInstance.create({[dbPrivateKey]: req.session.data[dbPrivateKey], ...data}, ...args),
             findOneAndUpdate: (query, update, ...args) => {
                 delete update[dbPrivateKey];
-                return modelInstance.findOneAndUpdate({ [dbPrivateKey]: req.session[dbPrivateKey], ...query }, update, ...args);
+                return modelInstance.findOneAndUpdate({ [dbPrivateKey]: req.session.data[dbPrivateKey], ...query }, update, ...args);
             },
             updateOne: (query, update, ...args) => {
                 delete update[dbPrivateKey];
-                modelInstance.updateOne({ [dbPrivateKey]: req.session[dbPrivateKey], ...query }, update, ...args);
+                modelInstance.updateOne({ [dbPrivateKey]: req.session.data[dbPrivateKey], ...query }, update, ...args);
             },
-            deleteOne: (query, ...args) => modelInstance.deleteOne({ [dbPrivateKey]: req.session[dbPrivateKey], ...query }, ...args),
-        }
-    };
-    //permite conexiones sin filtro a base de datos
-    req.publicQuery = (model) => {
-        const modelInstance = conn.models[model];
-        
-        if (!modelInstance) {
-            throw new Error(`El modelo ${model} no existe`);
-        }
-
-        return {
-            countDocuments: (query, ...args) => modelInstance.countDocuments(...query, ...args),
-            find: (query, ...args) => modelInstance.find(...query, ...args),
-            findOne: (query, ...args) => modelInstance.findOne(...query, ...args),
-            create: (data) => modelInstance.create(data),
-            findOneAndUpdate: (query, update, ...args) => modelInstance.findOneAndUpdate(...query, update, ...args),
-            updateOne: (query, update, ...args) => modelInstance.updateOne(...query, update, ...args),
-            deleteOne: (query, ...args) => modelInstance.deleteOne(...query, ...args),
+            deleteOne: (query, ...args) => modelInstance.deleteOne({ [dbPrivateKey]: req.session.data[dbPrivateKey], ...query }, ...args),
         }
     };
     //conexion directa a la base de datos
     req.mongoDB = conn;
+    //conexion directa simplificada a la base de datos
+    req.mongo = (model) => conn.models[model];
     next();
 })
 
 //routes
+app.use(require("./routes/client-routes"));
+app.use(require("./routes/company-routes"));
+app.use(require("./routes/config-routes"));
+app.use(require("./routes/dashboard-routes"));
 app.use(require("./routes/user-routes"));
 
 //ping para control
@@ -147,7 +141,7 @@ app.get("/", (req, res)=>{
 
 //retorna informacion basica para el uso general. Ej fecha, permisos de usuario, configuracion general
 app.get("/primordial", async (req, res)=>{
-    let resp = await req.getPrimordial();
+    let resp = await req.getPrimordial(req);
     res.status(200).json(resp);
 })
 

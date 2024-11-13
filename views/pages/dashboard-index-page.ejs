@@ -1,0 +1,173 @@
+<div id="dashboard-index-example" class="row">
+    <!--dropdownsearcher-->
+    <div class="col-sm-4">
+        <div class="card">
+            <div class="card-header">
+                DropDownSearcher
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="">search</label>
+                    <div class="input-group">
+                        <input type="text" name="test-dropdownsearcher" class="form-control bg-white" readonly>
+                        <div class="input-group-append" name="test-dropdownsearcher-open">
+                            <button class="btn btn-light  border"><i class="fas fa-search"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <b>code:</b>
+                <div class="bg-dark text-white w-100 p-2 text-monospace">
+                    code in "dashboard.dropDownSearcher"
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--sounds-->
+    <div class="col-sm-4">
+        <div class="card">
+            <div class="card-header">
+                Sounds
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-6">
+                        <button class="btn btn-block btn-flat btn-primary my-2" play-sound="primary">Primary</button>
+                    </div>
+                    <div class="col-6">
+                        <button class="btn btn-block btn-flat btn-success my-2" play-sound="success">success</button>
+                    </div>
+                    <div class="col-6">
+                        <button class="btn btn-block btn-flat btn-danger my-2" play-sound="danger">danger</button>
+                    </div>
+                    <div class="col-6">
+                        <button class="btn btn-block btn-flat btn-warning my-2" play-sound="warning">warning</button>
+                    </div>
+                    <div class="col-6">
+                        <button class="btn btn-block btn-flat btn-info my-2" play-sound="info">info</button>
+                    </div>
+                    <div class="col-6">
+                        <button class="btn btn-block btn-flat btn-secondary my-2" play-sound="noti1">noti1</button>
+                    </div>
+                    <div class="col-6">
+                        <button class="btn btn-block btn-flat btn-secondary my-2" play-sound="noti2">noti2</button>
+                    </div>
+                    <div class="col-6">
+                        <button class="btn btn-block btn-flat btn-secondary my-2" play-sound="tap">tap</button>
+                    </div>
+                    <div class="col-6">
+                        <button class="btn btn-block btn-flat btn-secondary my-2" play-sound="ray">ray</button>
+                    </div>
+                    <div class="col-6">
+                        <button class="btn btn-block btn-flat btn-secondary my-2" play-sound="error">error</button>
+                    </div>
+                    <div class="col-12">
+                        <b>code:</b>
+                        <div class="bg-dark text-white w-100 p-2 text-monospace">menu.playSound(soundName, force=false)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--toast-->
+    <div class="col-sm-4">
+        <div class="card">
+            <div class="card-header">
+                Toast
+            </div>
+            <div class="card-body">
+                <button class="btn btn-flat btn-block my-2 btn-primary" toast-level="primary">Primary</button>
+                <button class="btn btn-flat btn-block my-2 btn-success" toast-level="success">Success</button>
+                <button class="btn btn-flat btn-block my-2 btn-danger" toast-level="danger">Danger</button>
+                <button class="btn btn-flat btn-block my-2 btn-warning" toast-level="warning">Warning</button>
+                <button class="btn btn-flat btn-block my-2 btn-info" toast-level="info">Info</button>
+                <b>code:</b>
+                <div class="bg-dark text-white w-100 p-2 text-monospace">
+                    menu.toast({<br>
+                        level: 'danger', <br>
+                        title: 'hello', <br>
+                        message: 'Im Mathias Burgio', <br>
+                        sound: true<br>
+                    })
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--toggle-->
+    <div class="col-sm-4">
+        <div class="card">
+            <div class="card-header">
+                toggle
+            </div>
+            <div class="card-body">
+                <label>
+                    <input type='checkbox' class="toggle">
+                    <span>Click me!</span>
+                </label>
+                <br>
+                <b>code:</b>
+                <div class="bg-dark text-white w-100 p-2 text-monospace">
+                    copy tags from "/css/toggle.css"
+                    <br>
+                    get value $(querySelector).prop("checked")
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--expiration-bar-->
+    <div class="col-sm-4">
+        <div class="card">
+            <div class="card-header">
+                expiration
+            </div>
+            <div class="card-body">
+                <button class="btn btn-success btn-block btn-flat my-2" expiration-bar="2050-01-01">expiration in 2050-01-01</button>
+                <button class="btn btn-warning btn-block btn-flat my-2" expiration-bar="5">expiration in 5 days</button>
+                <button class="btn btn-danger btn-block btn-flat my-2" expiration-bar="-3">expiration 3 days ago</button>
+            </div>
+        </div>
+    </div>
+    <!--qr-->
+    <div class="col-sm-4">
+        <div class="card">
+            <div class="card-header">
+                qr
+            </div>
+            <div class="card-body">
+                <button class="btn btn-success btn-block btn-flat my-2" name="make-qr">make qr</button>
+                <div name="qr-container"></div>
+                <b>code:</b>
+                <div class="bg-dark text-white w-100 p-2 text-monospace">
+                    utils.getQR({text, size, color, background}, container)
+                    <br>
+                    return {qrInstance, img}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--expiration-bar-->
+    <div class="col-sm-4">
+        <div class="card">
+            <div class="card-header">
+                barcode
+            </div>
+            <div class="card-body">
+                <button class="btn btn-success btn-block btn-flat my-2" name="make-barcode">make barcode</button>
+                <div name="barcode-container"></div>
+                <b>code:</b>
+                <div class="bg-dark text-white w-100 p-2 text-monospace">
+                    utils.getQR({text, size, color, background}, container)
+                    <br>
+                    return {qrInstance, img}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/js/dashboard.js"></script>
+<script>
+    var dashboard;
+    window.onload = () => {
+        dashboard = new Dashboard();
+    }
+</script>

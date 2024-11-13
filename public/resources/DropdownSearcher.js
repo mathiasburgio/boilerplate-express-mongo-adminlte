@@ -14,6 +14,10 @@ class DropdownSearcher{
         this.input = input;
         this.searcherInput = null;//el input search. Se crea en la siguiente linea
         this.keyupEnter = keyupEnter;
+        this.items = items;
+        this.propId = propId;
+        this.propLabel = propLabel;
+        this.fnSearch = fnSearch;
         let fox = `<ul class="list-group w-100 border border-primary d-none" searcher="${this.searcherId}" style="position:absolute; top:30px; z-index:10;">
                     <li class="list-group-item">
                         <input type="search" class="form-control form-control-sm" placeholder="Buscar...">
@@ -28,6 +32,7 @@ class DropdownSearcher{
 
         input.parent().find("li").click(ev=>{
             let idd = $(ev.currentTarget).attr("idd");
+            console.log(idd);
             if(!idd) return; 
             let px = items.find(p=>p[propId] == idd);
             this.lastValue = px;
@@ -36,6 +41,8 @@ class DropdownSearcher{
 
         this.searcherInput = input.parent().find("[searcher='" + this.searcherId + "'] input");
         
+       
+
         this.searcherInput
         .blur(ev=>{
             setTimeout(()=>{ 
@@ -51,28 +58,7 @@ class DropdownSearcher{
                 return;
             }
             
-            //limpio el seleccionador por up/down
-            this.indexUpDown = 0;
-            $("[searcher='" + this.searcherId + "'] li").removeClass("bg-info");
-
-            let filtrados = [];
-            if(fnSearch){
-                filtrados = fnSearch(v);
-            }else{
-                filtrados = items.filter(px=>px[propLabel].toString().toLowerCase().indexOf(v) > -1);
-            }
-            input.parent().find("[searcher='" + this.searcherId + "'] li").addClass("d-none");//oculto las opciones
-            filtrados.forEach((item, index)=>{
-                if(index < 10){//limito la cantidad de resultados
-                    let li = input.parent().find("[searcher='" + this.searcherId + "'] li:eq(" +  (index + 1) + ")");
-                    if(li.length){//limito por 2da vez los resultados
-                        li.html(item[propLabel]);
-                        li.attr("idd", item[propId]);
-                        li.removeClass("d-none");
-                    }
-                }
-            })
-            input.parent().find("[searcher='" + this.searcherId + "'] li:eq(0)").removeClass("d-none");//muestro el buscador
+            this.filtrar(v);
         })
         .keydown(ev=>{
             if(ev.keyCode == 40){//DOWN
@@ -129,10 +115,36 @@ class DropdownSearcher{
         this.searcherInput.val("");
         this.searcherInput.focus();
         this.enabled = true;
+        this.filtrar("");
     }
     close(){
         if(this.button) this.button.removeClass("btn-primary").addClass("btn-secondary");
         this.input.parent().find("[searcher]").addClass("d-none");
         this.enabled = false;
+    }
+    filtrar(palabra){
+
+        //limpio el seleccionador por up/down
+        this.indexUpDown = 0;
+        $("[searcher='" + this.searcherId + "'] li").removeClass("bg-info");
+        
+        let filtrados = [];
+        if(typeof this.fnSearch == "function"){
+            filtrados = this.fnSearch(v);
+        }else{
+            filtrados = this.items.filter(px=>px[this.propLabel].toString().toLowerCase().indexOf(palabra) > -1);
+        }
+        this.input.parent().find("[searcher='" + this.searcherId + "'] li").addClass("d-none");//oculto las opciones
+        filtrados.forEach((item, index)=>{
+            if(index < 10){//limito la cantidad de resultados
+                let li = this.input.parent().find("[searcher='" + this.searcherId + "'] li:eq(" +  (index + 1) + ")");
+                if(li.length){//limito por 2da vez los resultados
+                    li.html(item[this.propLabel]);
+                    li.attr("idd", item[this.propId]);
+                    li.removeClass("d-none");
+                }
+            }
+        })
+        this.input.parent().find("[searcher='" + this.searcherId + "'] li:eq(0)").removeClass("d-none");//muestro el buscador
     }
 }

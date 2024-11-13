@@ -5,8 +5,13 @@ const userSchema = new mongoose.Schema({
     email: { type: String, required: true },
     password: { type: String, required: true },
     permissions: [String],
+    child: Boolean,
     isAdmin: Boolean,
-    deleted: Boolean
+    deleted: Boolean,
+    resetPassword: {
+        requestAt: Date,
+        token: String
+    }
 }, { timestamps: true });
 
 module.exports = userSchema; 

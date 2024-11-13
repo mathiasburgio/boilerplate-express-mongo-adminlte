@@ -3,12 +3,135 @@ class SuperExcel{
         this.columnsLetters = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
         this.currentFile = null;
     }
+    //<--CREATION-->
+    createFile(sheetNames=["datos"]){
+        this.currentFile = new ExcelJS.Workbook();
+        sheetNames.forEach(sheetName=>{
+            this.currentFile.addWorksheet(sheetName);
+        })
+        return this.currentFile;
+    }
+    loadFromUrl(url){
+        return new Promise(resolve=>{
+            fetch(url)
+            .then(response => response.arrayBuffer())
+            .then(arrayBuffer => {
+                // Carga el archivo en el libro de Excel
+                this.currentFile = workbook.xlsx.load(arrayBuffer);
+                resolve(this.currentFile);
+            })
+        })
+    }
+    //<--END CREATION-->
+
+    //<--READING-->
+    //columnId debe contener la columna en la cual se almacena un identificador unico. Ej en producto podria ser "codigo de barras"
+    //en props se puede pasar {A: "nombre", B: "Precio"}
+    readFileAsObject({sheetName="", startRow=1, endRow=10, startColumn=1, endColumn=10, columnId="A", props={}}){
+        let sheet = this.currentFile.getWorksheet(sheetName);
+        let errors = [];
+
+        //convierto las props a uppercase
+        Object.keys(props).forEach(prop=>{
+            props[prop.toUpperCase()] = props[prop];
+            delete props[prop.toLowerCase()];//elimino las props en lowerCase
+        })
+
+        let _startColumn = startColumn;
+        if(isNaN(_startColumn)) this.columnToInt(_startColumn);
+        let _endColumn = endColumn;
+        if(isNaN(_endColumn)) this.columnToInt(_endColumn);
+
+        let ret = {};
+        for(let row = startRow; row <= endRow; row++){
+            let obj = {};
+            obj._row = row;
+            let id = null;
+
+            for(let col = _startColumn; col <= _endColumn; col++){
+                let letter = this.intToColumn(col);
+                let cell = sheet.getCell(letter + row);
+                let value = cell.value;
+                if(props[letter]){
+                    obj[ props[letter] ] = value;
+                }else{
+                    obj[letter] = value;
+                }
+                if(letter == columnId) id = value;
+            }
+
+            if(typeof ret[columnId] != "undefined"){
+                errors.push(`Fila <b>${ret[columnId]._row}</b> y <b>${obj._row}</b> comparten identificador`);
+            }else{
+                ret[id] = obj;
+            }
+        }
+        return {errors, ret};
+    }
+    readFileAsArray({sheetName="", startRow=1, endRow=10, startColumn=1, endColumn=10}){
+        let sheet = this.currentFile.getWorksheet(sheetName);
+
+        let _startColumn = startColumn;
+        if(isNaN(_startColumn)) this.columnToInt(_startColumn);
+        let _endColumn = endColumn;
+        if(isNaN(_endColumn)) this.columnToInt(_endColumn);
+
+        let ret = [];
+        for(let row = startRow; row <= endRow; row++){
+            let obj = [];
+            for(let col = _startColumn; col <= _endColumn; col++){
+                let letter = this.intToColumn(col);
+                let cell = sheet.getCell(letter + row);
+                let value = cell.value;
+                obj.push(value);
+            }
+            ret.push(obj);
+        }
+        return ret;
+    }
+    readFileAsArrayOfObjects({sheetName="", startRow=1, endRow=10, startColumn=1, endColumn=10, props={}}){
+        let sheet = this.currentFile.getWorksheet(sheetName);
+
+        //convierto las props a uppercase
+        Object.keys(props).forEach(prop=>{
+            props[prop.toUpperCase()] = props[prop];
+            delete props[prop.toLowerCase()];//elimino las props en lowerCase
+        })
+
+        let _startColumn = startColumn;
+        if(isNaN(_startColumn)) this.columnToInt(_startColumn);
+        let _endColumn = endColumn;
+        if(isNaN(_endColumn)) this.columnToInt(_endColumn);
+
+        let ret = [];
+        for(let row = startRow; row <= endRow; row++){
+            let obj = {};
+            obj._row = row;
+
+            for(let col = _startColumn; col <= _endColumn; col++){
+                let letter = this.intToColumn(col);
+                let cell = sheet.getCell(letter + row);
+                let value = cell.value;
+                if(props[letter]){
+                    obj[ props[letter] ] = value;
+                }else{
+                    obj[letter] = value;
+                }
+            }
+
+            ret.push(obj);
+        }
+        return ret;
+    }
+    //<--READING-->
+    
+    //<--EDITION-->
     setHeader(cell, value){
         cell.fill = {
             type: 'pattern',
             pattern:'solid',
             fgColor:{argb:'3F7FBF'}
-            };
+        };
         cell.font = {
             name: 'Arial',
             family: 4,
@@ -23,6 +146,7 @@ class SuperExcel{
             bottom: {style:'thin', color: {argb:'FFFFFF'}},
             right: {style:'thin', color: {argb:'FFFFFF'}}
         };
+        cell.value = value;
     }
     columnToInt(columnHeader){
         return this.columnsLetters.indexOf( columnHeader.toLowerCase() );
@@ -96,14 +220,10 @@ class SuperExcel{
         })
 
     }
-    createFile(sheetNames=["datos"]){
-        this.currentFile = new ExcelJS.Workbook();
-        sheetNames.forEach(sheetName=>{
-            this.currentFile.addWorksheet(sheetName);
-        })
-        return this.currentFile;
-    }
-    exportFile(name){
+    //<--END EDITION-->
+
+    //<--EXPORT-->
+    exportFile(name, modalAfterDownload=true){
         this.currentFile.xlsx.writeBuffer().then(function(buffer){
             if(typeof saveAs == "undefined"){
                 console.log("falta saveAs")
@@ -111,7 +231,8 @@ class SuperExcel{
                 return;
             }
             saveAs(new Blob([buffer],{type:"application/vnd.ms-excel;charset=utf-8"}), name + '.xlsx');
-            modal.mensaje("Archivo exportado con éxito.");
+            if(modalAfterDownload) modal.mensaje("Archivo exportado con éxito.");
         });
     }
+    //<--END EXPORT-->
 }

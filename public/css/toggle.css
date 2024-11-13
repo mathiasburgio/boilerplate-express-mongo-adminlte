@@ -1,11 +1,12 @@
 
 /*
 <label>
-    <input type='checkbox'>
+    <input type='checkbox' class='toggle'>
     Click me!
 </label>
 */
-input[type='checkbox'] {
+input[type='checkbox'].toggle {
+    margin-top: -2px;
     appearance: none;
     position: relative;
     display: inline-block;
@@ -18,7 +19,7 @@ input[type='checkbox'] {
     transition: 0.25s linear background;
 }
 
-input[type='checkbox']::before {
+input[type='checkbox'].toggle::before {
     content: "";
     display: block;
     width: .75rem;
@@ -33,9 +34,9 @@ input[type='checkbox']::before {
     transform: translateX(0rem);
 }
 
-input[type='checkbox']:checked {
-    background: greenyellow;
+input[type='checkbox'].toggle:checked {
+    background: green;
 }
-input[type='checkbox']:checked::before {
+input[type='checkbox'].toggle:checked::before {
     transform: translateX(0.6rem);
 }

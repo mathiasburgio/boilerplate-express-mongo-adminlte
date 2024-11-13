@@ -208,6 +208,22 @@ class Utils{
         
         xhr.send(formData);
     }
+    uploadFileButton({url, file, button, onFinish=null}){
+        button.click(ev=>{
+            button.addClass("disable");
+            let text = button.html();
+            this.uploadFileButton({
+                url: url, 
+                file: file,
+                onProgress: porc =>{
+                    button.html(`${text} ${porc.toFixed(0)}%`);
+                },
+                onFinish: (ret, responseText) =>{
+                    if(onFinish) onFinish(ret, responseText, text);
+                }
+            })
+        })
+    }
     saveFile(content, name= "file.txt", type= "text/plain;charset=utf-8",) {
         let blob = new Blob([content], { type: type });
         saveAs(blob, name);
@@ -238,5 +254,53 @@ class Utils{
             });
         }
         return ret;
+    }
+    bindShowPasswordEvent( buttonElement, inputElement ){
+        const _showPassword = (show=false) => {
+            if(show){
+                buttonElement.find("i").addClass("fa-eye").removeClass("fa-eye-slash");
+                buttonElement.addClass("btn-warning").removeClass("btn-light");
+                inputElement.prop("type", "text");
+            }else{
+                buttonElement.find("i").addClass("fa-eye-slash").removeClass("fa-eye");
+                buttonElement.addClass("btn-light").removeClass("btn-warning");
+                inputElement.prop("type", "password");
+            }
+        }
+
+        buttonElement.mousedown(ev=>{
+            _showPassword(true);
+        }).mouseup(ev=>{
+            _showPassword(false);
+        }).mouseleave(ev=>{
+            _showPassword(false);
+        });
+        
+    }
+    getQR({text, size=128, color="#000000", background="#ffffff"}, container=null){
+        $("#qr-temp").remove();
+        $("body").append(`<div id='qr-temp' class='d-none'></div>`);
+        let qrcode = new QRCode("qr-temp", {
+            text: text,
+            width: size,
+            height: size,
+            colorDark : color,
+            colorLight : background,
+            correctLevel : QRCode.CorrectLevel.H
+        });
+        let img = $("#qr-temp img");
+        if(container) container.html(img);
+        return { qrcode, img };
+    }
+    getBarcode(text, container=null){
+        $("#barcode-temp").remove();
+        $("body").append(`<img id='barcode-temp' class='d-none'>`);
+        $("#barcode-temp").JsBarcode(text);
+        let img = $("#barcode-temp");
+        if(container){
+            container.html( img );
+            container.find("img").removeClass("d-none");
+        }
+        return img;
     }
 }

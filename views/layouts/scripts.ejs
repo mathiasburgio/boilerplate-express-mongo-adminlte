@@ -1,9 +1,40 @@
-<script src="/resources/jquery-3.7.1.min.js"></script>
-<script src="/resources/bootstrap/js/popper.min.js"></script>
+<script src="/resources/cdn/jquery-3.7.1.min.js"></script>
+<script src="/resources/cdn/bootstrap/js/popper.min.js"></script>
 
-<script src="/resources/adminlte/js/adminlte.min.js"></script>
-<script src="/resources/bootstrap/js/bootstrap.min.js"></script>
-<script src="/resources/sweetalert2/sweetalert2.all.min.js"></script>
+<script src="/resources/cdn/adminlte/js/adminlte.min.js"></script>
+<script src="/resources/cdn/bootstrap/js/bootstrap.min.js"></script>
+<script src="/resources/cdn/sweetalert2/sweetalert2.all.min.js"></script>
+
+<script src="/resources/cdn/FileSaver.js"></script>
+<script src="/resources/cdn/exceljs.min.js"></script>
+<script src="/resources/cdn/jsBarcode.all.min.js"></script>
+<script src="/resources/cdn/qrcode.min.js"></script>
 
 <script src="/resources/Fechas.js"></script>
 <script src="/resources/Modal.js"></script>
+<script src="/resources/Utils.js"></script>
+<script src="/resources/DropdownSearcher.js"></script>
+<script src="/resources/Menu.js"></script>
+<script src="/resources/SuperExcel.js"></script>
+<script src="/resources/Impresor.js"></script>
+<script src="/resources/Imagine.js"></script>
+
+<script>
+    var fechas, modal, utils, menu, superExcel, impresor, primordial;
+    async function boilerplate(loadPrimordial=true){
+        fechas = new Fechas();
+        modal = new Modal();
+        utils = new Utils();
+        menu = new Menu();
+        if(loadPrimordial){
+            try{
+                let resp = await $.get({url: "/primordial"});
+                //console.log(resp);
+                primordial = resp;
+                menu.setPermissions(primordial.permissions)
+            }catch(err){
+                alert(err.toString());
+            }
+        }
+    }
+</script>

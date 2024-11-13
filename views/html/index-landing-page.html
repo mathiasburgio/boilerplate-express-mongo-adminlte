@@ -2,8 +2,10 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>boilerplate</title>
+    <link rel="icon" type="image/x-icon" href="/resources/icon.ico">
+
     <link rel="stylesheet" href="/resources/cdn/adminlte/css/adminlte.min.css">
     <link rel="stylesheet" href="/resources/cdn/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/resources/cdn/font-awesome-6.6.0/css/all.min.css">
@@ -11,6 +13,7 @@
     <link rel="stylesheet" href="/resources/cdn/sweetalert2/sweetalert2.min.css">
     <link rel="stylesheet" href="/resources/cdn/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
     <link rel="stylesheet" href="/css/main.css">
+    
     <style>
         html, body{
             padding: 0;
@@ -45,6 +48,27 @@
             margin-top: 20px;
             margin-bottom: 20px;
         }
+        .panel{
+            position: relative;
+        }
+        .change-panel-left{
+            position: absolute;
+            top:0;
+            left: 0;
+        }
+        .change-panel-right{
+            position: absolute;
+            top:0;
+            right: 0;
+        }
+        .contact-whatsapp{
+            position: fixed;
+            bottom: 2.5rem;
+            right: 1rem;
+            font-size: 3.5rem;
+            cursor: pointer;
+            color: var(--color-whatsapp)
+        }
     </style>
 </head>
 <body>
@@ -64,7 +88,7 @@
                     </span>
                     <span class="nav-center">
                         <span class="mx-1"><a href="#" scroll-to="how-it-works">How it works</a></span>
-                        <span class="mx-1"><a href="#" scroll-to="prices">Prices</a></span>
+                        <span class="mx-1"><a href="#" scroll-to=".pricing">Prices</a></span>
                         <span class="mx-1"><a href="/?just-login">index v2</a></span>
                     </span>
                     <span class="nav-right">
@@ -80,222 +104,291 @@
                     <button class="btn btn-success">LO QUIERO YA <i class="fas fa-rocket"></i></button>
                 </span>
             </article>
-            <article class="panel-1"></article>
-            <article class="panel-2"></article>
-            <article class="panel-3"></article>
-            <article class="pricing-v1 py-5">
-                <div class="container">
-                    <h2 class="mb-3 text-center">Prices v1</h2>
-                    <div class="h-scroll">
-                        <table class="table table-borderless text-center">
-                            <tbody>
-                                <tr>
-                                    <td></td>
-                                    <td class="bg-danger">Starter</td>
-                                    <td class="bg-info">Essential</td>
-                                    <td class="bg-warning">Professional</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div>Select your plan</div>
-                                        <i class="fas fa-circle-arrow-right"></i>
-                                    </td>
-                                    <td class="text-center text-danger">
-                                        <div name="price">
-                                            $10
-                                        </div>
-                                        <div>
-                                            <small>month</small><br>
-                                            <span class="text-dark">Contratación anual</span>
-                                        </div>
-                                        <button class="btn btn-outline-danger">Contratar</button>
-                                    </td>
-                                    <td class="text-center text-info" style="position: relative;">
-                                        <span class="badge badge-success" style="position: absolute; top: 5px; right: 5px;">Popular</span>
-                                        <div name="price">
-                                            $22
-                                        </div>
-                                        <div>
-                                            <small>month</small><br>
-                                            <span class="text-dark">Contratación anual</span>
-                                        </div>
-                                        <button class="btn btn-outline-info">Contratar</button>
-                                    </td>
-                                    <td class="text-center text-warning">
-                                        <div name="price">
-                                            $35
-                                        </div>
-                                        <div>
-                                            <small>month</small><br>
-                                            <span class="text-dark">Contratación anual</span>
-                                        </div>
-                                        <button class="btn btn-outline-warning">Contratar</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="text-left font-weight-bold">
-                                        Gestión comercial
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-circle-check text-danger fa-lg"></i>
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-circle-check text-info fa-lg"></i>
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-circle-check text-warning fa-lg"></i>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="text-left font-weight-bold">
-                                        Tienda virtual / carta QR
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-circle-xmark text-secondary fa-lg"></i>
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-circle-check text-info fa-lg"></i>
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-circle-check text-warning fa-lg"></i>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="text-left font-weight-bold">
-                                        Facturación electronica
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-circle-xmark text-secondary fa-lg"></i>
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-circle-check text-info fa-lg"></i>
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-circle-check text-warning fa-lg"></i>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="text-left font-weight-bold">
-                                        Funciones especiales <i class="fas fa-circle-question fa-lg cp"></i>
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-circle-xmark text-secondary fa-lg"></i>
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-circle-xmark text-secondary fa-lg"></i>
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-circle-check text-warning fa-lg"></i>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+            <article class="panel">
+                <div class="change-panel-left cp bg-light h-100 px-5 d-none align-items-center"><i class="fas fa-circle-arrow-left fa-xl"></i></div>
+                <article visible="true">
+                    <div class="bg-danger w-100" style="height: 500px;"></div>
+                </article>
+                <article class="d-none" visible="false">
+                    <div class="bg-success w-100" style="height: 500px;"></div>
+                </article>
+                <article class="d-none" visible="false">
+                    <div class="bg-info w-100" style="height: 500px;"></div>
+                </article>
+                <article class="d-none" visible="false">
+                    <div class="bg-primary w-100" style="height: 500px;"></div>
+                </article>
+                <div class="change-panel-right cp bg-light h-100 px-5 d-none align-items-center"><i class="fas fa-circle-arrow-right fa-xl"></i></div>
             </article>
-            <article class="pricing-v2">
-                <div class="container">
-                    <h2 class="mb-3 text-center">Prices v2</h2>
-                    <div class="h-scroll">
-                        <div class="row">
-                            <div class="col">
-                                <div class="card rounded-0 bg-1 text-center text-white">
-                                    <div class="card-body py-3">
-                                        <h5 style="font-size: 2.5rem;">Free</h5>
-                                        <p style="font-size: 1rem;">Prueba</p>
-                                        <div class="bg-2 my-3 py-3" style="font-size: 3rem;">
-                                            $10 <small style="font-size: 1.5rem;">/month</small>
+            <article class="panel pricing py-5">
+                <div class="change-panel-left cp bg-light h-100 px-5 d-none align-items-center"><i class="fas fa-circle-arrow-left fa-xl"></i></div>
+                <article class="pricing-v1" visible="true">
+                    <div class="container">
+                        <h2 class="mb-3 text-center">Prices v1</h2>
+                        <div class="h-scroll">
+                            <table class="table table-borderless text-center">
+                                <tbody>
+                                    <tr>
+                                        <td class="bg-light"></td>
+                                        <td class="bg-danger">Starter</td>
+                                        <td class="bg-info">Essential</td>
+                                        <td class="bg-warning">Professional</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="bg-light" style="font-size: 1.5rem;">
+                                            <div>Select your plan</div>
+                                            <i class="fas fa-circle-arrow-right"></i>
+                                        </td>
+                                        <td class="text-center text-danger">
+                                            <div name="price">
+                                                $10
+                                            </div>
+                                            <div>
+                                                <small>month</small><br>
+                                                <span class="text-dark">Contratación anual</span>
+                                            </div>
+                                            <button class="btn btn-outline-danger">Contratar</button>
+                                        </td>
+                                        <td class="text-center text-info" style="position: relative;">
+                                            <span class="badge badge-success" style="position: absolute; top: 5px; right: 5px;">Popular</span>
+                                            <div name="price">
+                                                $22
+                                            </div>
+                                            <div>
+                                                <small>month</small><br>
+                                                <span class="text-dark">Contratación anual</span>
+                                            </div>
+                                            <button class="btn btn-outline-info">Contratar</button>
+                                        </td>
+                                        <td class="text-center text-warning">
+                                            <div name="price">
+                                                $35
+                                            </div>
+                                            <div>
+                                                <small>month</small><br>
+                                                <span class="text-dark">Contratación anual</span>
+                                            </div>
+                                            <button class="btn btn-outline-warning">Contratar</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left font-weight-bold bg-light">
+                                            Gestión comercial
+                                        </td>
+                                        <td>
+                                            <i class="fas fa-circle-check text-danger fa-lg"></i>
+                                        </td>
+                                        <td>
+                                            <i class="fas fa-circle-check text-info fa-lg"></i>
+                                        </td>
+                                        <td>
+                                            <i class="fas fa-circle-check text-warning fa-lg"></i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left font-weight-bold bg-light">
+                                            Tienda virtual / carta QR
+                                        </td>
+                                        <td>
+                                            <i class="fas fa-circle-xmark text-secondary fa-lg"></i>
+                                        </td>
+                                        <td>
+                                            <i class="fas fa-circle-check text-info fa-lg"></i>
+                                        </td>
+                                        <td>
+                                            <i class="fas fa-circle-check text-warning fa-lg"></i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left font-weight-bold bg-light">
+                                            Facturación electronica
+                                        </td>
+                                        <td>
+                                            <i class="fas fa-circle-xmark text-secondary fa-lg"></i>
+                                        </td>
+                                        <td>
+                                            <i class="fas fa-circle-check text-info fa-lg"></i>
+                                        </td>
+                                        <td>
+                                            <i class="fas fa-circle-check text-warning fa-lg"></i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left font-weight-bold bg-light">
+                                            Funciones especiales <i class="fas fa-circle-question fa-lg cp"></i>
+                                        </td>
+                                        <td>
+                                            <i class="fas fa-circle-xmark text-secondary fa-lg"></i>
+                                        </td>
+                                        <td>
+                                            <i class="fas fa-circle-xmark text-secondary fa-lg"></i>
+                                        </td>
+                                        <td>
+                                            <i class="fas fa-circle-check text-warning fa-lg"></i>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </article>
+                <article class="pricing-v2 d-none" visible="false">
+                    <div class="container">
+                        <h2 class="mb-3 text-center">Prices v2</h2>
+                        <div class="h-scroll">
+                            <div class="row">
+                                <div class="col">
+                                    <div class="card rounded-0 bg-1 text-center text-white">
+                                        <div class="card-body py-3">
+                                            <h5 style="font-size: 2.5rem;">Free</h5>
+                                            <p style="font-size: 1rem;">Prueba</p>
+                                            <div class="bg-2 my-3 py-3" style="font-size: 3rem; margin: -20px;">
+                                                $10 <small style="font-size: 1.5rem;">/month</small>
+                                            </div>
+                                            <ul class="text-left" style="list-style: none;">
+                                                <li>
+                                                    <i class="fas fa-store"></i> gestión comercial
+                                                </li>
+                                                <li class="text-secondary tachado">
+                                                    <i class="fas fa-earth-americas"></i> tienda virtual
+                                                </li>
+                                                <li class="text-secondary tachado">
+                                                    <i class="fas fa-file-invoice-dollar"></i> facturación electronica
+                                                </li>
+                                            </ul>
+                                            <button class="btn btn-flat btn-primary btn-block m-auto" style="width: 90%;">Elegir plán</button>
                                         </div>
-                                        <ul class="text-left" style="list-style: none;">
-                                            <li>
-                                                <i class="fas fa-store"></i> gestión comercial
-                                            </li>
-                                            <li class="text-secondary tachado">
-                                                <i class="fas fa-earth-americas"></i> tienda virtual
-                                            </li>
-                                            <li class="text-secondary tachado">
-                                                <i class="fas fa-file-invoice-dollar"></i> facturación electronica
-                                            </li>
-                                        </ul>
-                                        <button class="btn btn-flat btn-primary btn-block m-auto" style="width: 90%;">Elegir plán</button>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col">
-                                <div class="card rounded-0 bg-1 text-center text-white">
-                                    <div class="card-body py-3">
-                                        <h5 style="font-size: 2.5rem;">Inicial</h5>
-                                        <p style="font-size: 1rem;">comercios pequeños</p>
-                                        <div class="bg-2 my-3 py-3" style="font-size: 3rem;">
-                                            $10 <small style="font-size: 1.5rem;">/month</small>
+                                <div class="col">
+                                    <div class="card rounded-0 bg-1 text-center text-white">
+                                        <div class="card-body py-3">
+                                            <h5 style="font-size: 2.5rem;">Inicial</h5>
+                                            <p style="font-size: 1rem;">comercios pequeños</p>
+                                            <div class="bg-2 my-3 py-3" style="font-size: 3rem; margin: -20px;">
+                                                $10 <small style="font-size: 1.5rem;">/month</small>
+                                            </div>
+                                            <ul class="text-left" style="list-style: none;">
+                                                <li>
+                                                    <i class="fas fa-store"></i> gestión comercial
+                                                </li>
+                                                <li class="text-secondary tachado">
+                                                    <i class="fas fa-earth-americas"></i> tienda virtual
+                                                </li>
+                                                <li class="text-secondary tachado">
+                                                    <i class="fas fa-file-invoice-dollar"></i> facturación electronica
+                                                </li>
+                                            </ul>
+                                            <button class="btn btn-flat btn-primary btn-block m-auto" style="width: 90%;">Elegir plán</button>
                                         </div>
-                                        <ul class="text-left" style="list-style: none;">
-                                            <li>
-                                                <i class="fas fa-store"></i> gestión comercial
-                                            </li>
-                                            <li class="text-secondary tachado">
-                                                <i class="fas fa-earth-americas"></i> tienda virtual
-                                            </li>
-                                            <li class="text-secondary tachado">
-                                                <i class="fas fa-file-invoice-dollar"></i> facturación electronica
-                                            </li>
-                                        </ul>
-                                        <button class="btn btn-flat btn-primary btn-block m-auto" style="width: 90%;">Elegir plán</button>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col">
-                                <div class="card rounded-0 bg-1 text-center text-white" style="position: relative;">
-                                    <div class="card-body py-3">
-                                        <div class="bg-success text-white p-2" style="position: absolute; top:0; right: 0;">más popular</div>
-                                        <h5 style="font-size: 2.5rem;">Profesional</h5>
-                                        <p style="font-size: 1rem;">comercios medianos</p>
-                                        <div class="bg-2 my-3 py-3" style="font-size: 3rem;">
-                                            $10 <small style="font-size: 1.5rem;">/month</small>
+                                <div class="col">
+                                    <div class="card rounded-0 bg-1 text-center text-white" style="position: relative;">
+                                        <div class="card-body py-3">
+                                            <div class="bg-success text-white p-2" style="position: absolute; top:0; right: 0;">más popular</div>
+                                            <h5 style="font-size: 2.5rem;">Profesional</h5>
+                                            <p style="font-size: 1rem;">comercios medianos</p>
+                                            <div class="bg-2 my-3 py-3" style="font-size: 3rem; margin: -20px;">
+                                                $10 <small style="font-size: 1.5rem;">/month</small>
+                                            </div>
+                                            <ul class="text-left" style="list-style: none;">
+                                                <li>
+                                                    <i class="fas fa-store"></i> gestión comercial
+                                                </li>
+                                                <li>
+                                                    <i class="fas fa-earth-americas"></i> tienda virtual
+                                                </li>
+                                                <li>
+                                                    <i class="fas fa-file-invoice-dollar"></i> facturación electronica
+                                                </li>
+                                            </ul>
+                                            <button class="btn btn-flat btn-primary btn-block m-auto" style="width: 90%;">Elegir plán</button>
                                         </div>
-                                        <ul class="text-left" style="list-style: none;">
-                                            <li>
-                                                <i class="fas fa-store"></i> gestión comercial
-                                            </li>
-                                            <li>
-                                                <i class="fas fa-earth-americas"></i> tienda virtual
-                                            </li>
-                                            <li>
-                                                <i class="fas fa-file-invoice-dollar"></i> facturación electronica
-                                            </li>
-                                        </ul>
-                                        <button class="btn btn-flat btn-primary btn-block m-auto" style="width: 90%;">Elegir plán</button>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col">
-                                <div class="card rounded-0 bg-1 text-center text-white">
-                                    <div class="card-body py-3">
-                                        <h5 style="font-size: 1.5rem;">Distribuidora & distribuidora</h5>
-                                        <p style="font-size: 1rem;">comercios medianos</p>
-                                        <div class="bg-2 my-3 py-3" style="font-size: 3rem;">
-                                            $10 <small style="font-size: 1.5rem;">/month</small>
+                                <div class="col">
+                                    <div class="card rounded-0 bg-1 text-center text-white">
+                                        <div class="card-body py-3">
+                                            <h5 style="font-size: 1.5rem;">Distribuidora & distribuidora</h5>
+                                            <p style="font-size: 1rem;">comercios medianos</p>
+                                            <div class="bg-2 my-3 py-3" style="font-size: 3rem; margin: -20px;">
+                                                $10 <small style="font-size: 1.5rem;">/month</small>
+                                            </div>
+                                            <ul class="text-left" style="list-style: none;">
+                                                <li>
+                                                    <i class="fas fa-store"></i> gestión comercial
+                                                </li>
+                                                <li>
+                                                    <i class="fas fa-earth-americas"></i> tienda virtual
+                                                </li>
+                                                <li>
+                                                    <i class="fas fa-file-invoice-dollar"></i> facturación electronica
+                                                </li>
+                                                <li>
+                                                    <i class="fas fa-user-astronaut"></i> funciones especiales
+                                                </li>
+                                            </ul>
+                                            <button class="btn btn-flat btn-primary btn-block m-auto" style="width: 90%;">Elegir plán</button>
                                         </div>
-                                        <ul class="text-left" style="list-style: none;">
-                                            <li>
-                                                <i class="fas fa-store"></i> gestión comercial
-                                            </li>
-                                            <li>
-                                                <i class="fas fa-earth-americas"></i> tienda virtual
-                                            </li>
-                                            <li>
-                                                <i class="fas fa-file-invoice-dollar"></i> facturación electronica
-                                            </li>
-                                            <li>
-                                                <i class="fas fa-user-astronaut"></i> funciones especiales
-                                            </li>
-                                        </ul>
-                                        <button class="btn btn-flat btn-primary btn-block m-auto" style="width: 90%;">Elegir plán</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </article>
+                <div class="change-panel-right cp bg-light h-100 px-5 d-none align-items-center"><i class="fas fa-circle-arrow-right fa-xl"></i></div>
+            </article>
+            <article class="panel faq py-5">
+                <div class="container">
+                    <h3 class="mb-3 text-center">Preguntas frecuentes</h3>
+                    <div id="accordion">
+                        <div class="card card-primary card-outline">
+                            <a class="d-block w-100 collapsed" data-toggle="collapse" href="#faq1" aria-expanded="false">
+                                <div class="card-header bg-white">
+                                    <h4 class="card-title w-100">
+                                        1. Se puede usar en red
+                                    </h4>
+                                </div>
+                            </a>
+                            <div id="faq1" class="collapse" data-parent="#accordion" style="">
+                                <div class="card-body">
+                                    Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card card-primary card-outline">
+                            <a class="d-block w-100 collapsed" data-toggle="collapse" href="#faq2" aria-expanded="false">
+                                <div class="card-header bg-white">
+                                    <h4 class="card-title w-100">
+                                        2. Tiene comisiones por venta 
+                                    </h4>
+                                </div>
+                            </a>
+                            <div id="faq2" class="collapse" data-parent="#accordion" style="">
+                                <div class="card-body">
+                                    Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card card-primary card-outline">
+                            <a class="d-block w-100 collapsed" data-toggle="collapse" href="#faq3" aria-expanded="false">
+                                <div class="card-header bg-white">
+                                    <h4 class="card-title w-100">
+                                        3. Funciona con lector de barras
+                                    </h4>
+                                </div>
+                            </a>
+                            <div id="faq3" class="collapse" data-parent="#accordion" style="">
+                                <div class="card-body">
+                                    Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <button class="btn btn-flat btn-success">¡Quiero probarlo!</button>
                 </div>
             </article>
         </main>
@@ -349,6 +442,7 @@
                 </div>
             </div>
         </footer>
+        <i class="contact-whatsapp fab fa-whatsapp fa-xl"></i>
     </div>
 
     <div id="modals">
@@ -362,11 +456,12 @@
                 <div class="input-group">
                     <input type="password" class="form-control" autocomplete="off" name="password">
                     <div class="input-group-append">
-                        <button class="btn btn-light border"><i class="fas fa-eye-slash"></i></button>
+                        <button class="btn btn-light border" name="show-password"><i class="fas fa-eye-slash"></i></button>
                     </div>
                 </div>
             </div>
-            <button class="btn btn-primary" name="login">Login</button>
+            <button class="btn btn-primary" name="try-login">Login</button>
+            <p class="text-center text-primary cp" name="forgot-password">Forgot password?</p>
         </template>
         <template id="registry-modal">
             <div class="form-group">
@@ -382,7 +477,7 @@
                 <div class="input-group">
                     <input type="password" class="form-control" autocomplete="off" name="password">
                     <div class="input-group-append">
-                        <button class="btn btn-light border"><i class="fas fa-eye-slash"></i></button>
+                        <button class="btn btn-light border" name="show-password"><i class="fas fa-eye-slash"></i></button>
                     </div>
                 </div>
             </div>
@@ -393,9 +488,11 @@
         </template>
         <template id="reset-password-modal">
             <div class="alert alert-info">
-                Ingresa tu email y haz clic en <b>restablecer contraseña</b> y te enviaremos un correo para que puedas cambiar tu contraseña de inicio de sesión.
-                <br>
-                El email puede demorar unos minutos en llegar a tu casilla; es aconsejable verificar el buzón de <b>spam / correo no deseado</b>
+                <small>
+                    <b>*</b>Ingresa tu email y haz clic en <b>restablecer contraseña</b> y te enviaremos un correo para que puedas cambiar tu contraseña de inicio de sesión.
+                    <br>
+                    <b>*</b>El email puede demorar unos minutos en llegar a tu casilla; es aconsejable verificar el buzón de <b>spam / correo no deseado</b>
+                </small>
             </div>
             <div class="form-group">
                 <label for="">Email</label>
@@ -414,16 +511,14 @@
     <script src="/resources/Fechas.js"></script>
     <script src="/resources/Modal.js"></script>
     <script src="/resources/Utils.js"></script>
-    <script src="/resources/Menu.js"></script>
     <script src="/js/index-landing-page.js"></script>
     <script>
-        var fechas, modal, utils, menu, indexLandingPage;        
+        var fechas, modal, utils, index;        
         window.onload = () => {
             fechas = new Fechas();
             modal = new Modal();
             utils = new Utils();
-            menu = new Menu();
-            indexLandingPage = new IndexLandingPage();
+            index = new IndexLandingPage();
         }
     </script>
 </body>

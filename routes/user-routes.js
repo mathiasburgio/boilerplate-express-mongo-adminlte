@@ -12,6 +12,8 @@ router.put("/user/update-self", userController.updateSelf);
 router.put("/user/update-child", middlewares.checkPermissions({permission:"users"}), userController.updateChild);
 router.delete("/user/delete-child", middlewares.checkPermissions({permission:"users"}), userController.deleteChild);
 router.post("/user/login", middlewares.loginRateLimit, userController.login);
-router.post("/user/logout", userController.logout);
+router.get("/user/logout", userController.logout);
+router.post("/user/request-password-change", userController.requestPasswordChange);
+router.post("/user/change-password", userController.changePassword);
 
 module.exports = router;
