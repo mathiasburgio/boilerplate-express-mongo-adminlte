@@ -72,3 +72,16 @@ body.dark-mode .swal2-title{
     font-weight: bold;
     color: var(--white) !important;
 }
+
+body.thead-mode-sticky table th{
+    position: sticky;
+    top:0;
+}
+/*
+    se (agrega | quita) esta clase con JS
+    menu.setTheadDynamic()
+*/
+.thead-mode-dynamic{
+    position: sticky;
+    top:0;
+}

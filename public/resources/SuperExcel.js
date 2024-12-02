@@ -17,7 +17,10 @@ class SuperExcel{
             .then(response => response.arrayBuffer())
             .then(arrayBuffer => {
                 // Carga el archivo en el libro de Excel
-                this.currentFile = workbook.xlsx.load(arrayBuffer);
+                const workbook = new ExcelJS.Workbook();
+                return workbook.xlsx.load(arrayBuffer);
+            }).then(ret=>{
+                this.currentFile = ret;
                 resolve(this.currentFile);
             })
         })
@@ -169,10 +172,10 @@ class SuperExcel{
         }
 
         let currentRow = startCell.row;
-        let currentColumn = this.columnToInt(startCell.column.letter);
+        let currentColumn = this.columnToInt(startCell._column.letter);
         let cc = 0;
         for(let prop in arrayOfObjects[0]){
-            let cell = this.currentFile.getWorksheet(startCell.worksheet).getCell(this.intToColumn(currentColumn + cc) + currentRow.toString());
+            let cell = this.currentFile.getWorksheet(startCell.worksheet.name).getCell(this.intToColumn(currentColumn + cc) + currentRow.toString());
             this.setHeader(cell, prop);
             cc++;
         }
@@ -181,10 +184,10 @@ class SuperExcel{
         let cr = 0;
         for(let item of arrayOfObjects){
 
-            currentColumn = this.columnToInt(startCell.column.letter);
+            currentColumn = this.columnToInt(startCell._column.letter);
             for(let prop in item){
                 let val = item[prop];
-                let cell = this.currentFile.getWorksheet(startCell.worksheet).getCell(this.intToColumn(currentColumn + cr) + currentRow.toString());
+                let cell = this.currentFile.getWorksheet(startCell.worksheet.name).getCell(this.intToColumn(currentColumn + cr) + currentRow.toString());
                 cell.value = val.toString();
             }
             cr++;
@@ -201,19 +204,19 @@ class SuperExcel{
         }
 
         let currentRow = startCell.row;
-        let currentColumn = this.columnToInt(startCell.column.letter);
-        $(query).find("thead th").each((ind, ev)=>{
+        let currentColumn = this.columnToInt(startCell._column.letter);
+        $(querySelector).find("thead th").each((ind, ev)=>{
             let htmlCell = $(ev);
-            let cell = this.currentFile.getWorksheet(startCell.worksheet).getCell(this.intToColumn(currentColumn + ind) + currentRow.toString());
+            let cell = this.currentFile.getWorksheet(startCell.worksheet.name).getCell(this.intToColumn(currentColumn + ind) + currentRow.toString());
             this.setHeader(cell, htmlCell.text());
         })
 
         currentRow += 1;//aumento por el encabezado
-        $(query).find("tbody tr").each((ind, ev)=>{
+        $(querySelector).find("tbody tr").each((ind, ev)=>{
             let htmlRow = $(ev);
-            currentColumn = this.columnToInt(startCell.column.letter);
+            currentColumn = this.columnToInt(startCell._column.letter);
             htmlRow.find("td").each((ind, ev)=>{
-                let cell = this.currentFile.getWorksheet(startCell.worksheet).getCell(this.intToColumn(currentColumn + ind) + currentRow.toString());
+                let cell = this.currentFile.getWorksheet(startCell.worksheet.name).getCell(this.intToColumn(currentColumn + ind) + currentRow.toString());
                 cell.value = htmlCell.text();
             })
             currentRow += 1;

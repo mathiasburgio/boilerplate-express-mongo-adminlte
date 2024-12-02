@@ -1,16 +1,39 @@
 class Menu{
     constructor(){
+        this.THEAD_MODES = ["normal", "sticky", "dynamic"];
         this.sounds = (localStorage.getItem("sounds") === null || localStorage.getItem("sounds") === "true");
         this.setSounds(this.sounds);
-        $("#toggle-sounds").click(ev=> this.setSounds() );
+        $("#toggle-sounds").click(ev=>{ 
+            this.setSounds() 
+            this.toast({level: "info", title: `Sonidos`, message: this.sounds ? "Sonidos activados" : "Modo SILENCIOSO activado", time:4000})
+        });
         
         this.darkMode = (localStorage.getItem("darkMode") === "true");
         this.setDarkMode(this.darkMode);
-        $("#toggle-dark-mode").click(ev=> this.setDarkMode() );
+        $("#toggle-dark-mode").click(ev=>{
+            this.setDarkMode()
+            this.toast({level: "info", title: `Modo oscuro`, message: this.darkMode ? "Modo OSCURO activado" : "Modo CLARO activado", time:4000})
+        });
 
         this.upperCase = (localStorage.getItem("upperCase") === "true");
         this.setUpperCase(this.upperCase);
-        $("#toggle-upper-lower-case").click(ev=> this.setUpperCase() );
+        $("#toggle-upper-lower-case").click(ev=>{
+            this.setUpperCase()
+            this.toast({level: "info", title: `Tablas en mayusculas`, message: `Las tablas mostrarán los datos ${this.upperCase ? "en MAYUSCULAS" : "de igual forma que se han guardado"}`, time:4000})
+        });
+
+        this.theadMode = Number(localStorage.getItem("theadMode")) || 0;
+        this.setTheadMode(this.theadMode);
+        $("#toggle-thead-mode").click(ev=>{
+            this.setTheadMode()
+            if(this.theadMode === 0){//normal
+                this.toast({level: "info", title: `Encabezado tablas`, message: `Encabezados normal/fijos al principio de las tablas`, time:4000})
+            }else if(this.theadMode === 1){
+                this.toast({level: "info", title: `Encabezado tablas`, message: `Encabezados SIEMPRE VISIBLES`, time:4000})
+            }else if(this.theadMode === 2){
+                this.toast({level: "info", title: `Encabezado tablas`, message: `Encabezados DINÁMICOS. Se muestran al pasar el mouse sobre la tabla`, time:4000})
+            }
+        });
 
         $(".nav-logout").click(async()=>{
             let resp = await modal.pregunta(`¿Confirma <b>cerrar sesión</b>?`);
@@ -35,6 +58,9 @@ class Menu{
             $(".content-wrapper>.content").animate({
                 opacity: 1
             }, "fast")
+
+            //verifico el modo dinamico una vez mas
+            this.setTheadDynamic();
         })
     }
     showLeftMenu(show=null){
@@ -124,6 +150,31 @@ class Menu{
             $("body").removeClass("dark-mode");
         }
     }
+    setTheadMode(v=null){
+
+        if(v === null){
+            this.theadMode += 1;
+            if(this.theadMode == 3) this.theadMode = 0;
+        }else{
+            this.theadMode = v;
+        }
+        
+        localStorage.setItem("theadMode", (this.theadMode).toString());
+        if(this.theadMode == 0){
+            $("#toggle-thead-mode").removeClass("btn-primary").removeClass("btn-warning").addClass("btn-light");
+            $("#toggle-thead-mode i").removeClass("fa-table-cells-row-lock").addClass("fa-table");
+            $("body").removeClass("thead-mode-sticky").removeClass("thead-mode-dynamic");
+        }else if(this.theadMode == 1){
+            $("#toggle-thead-mode").addClass("btn-primary").removeClass("btn-warning").removeClass("btn-light");
+            $("#toggle-thead-mode i").addClass("fa-table-cells-row-lock").removeClass("fa-table");
+            $("body").addClass("thead-mode-sticky").removeClass("thead-mode-dynamic");
+        }else if(this.theadMode == 2){
+            $("#toggle-thead-mode").removeClass("btn-primary").addClass("btn-warning").removeClass("btn-light");
+            $("#toggle-thead-mode i").addClass("fa-table-cells-row-lock").removeClass("fa-table");
+            $("body").removeClass("thead-mode-sticky").addClass("thead-mode-dynamic");
+        }
+        this.setTheadDynamic();
+    }
     playSound(audioName, force=false){
         if(!this.sounds && force == false) return;
         audioName = audioName.replace(".mp3", "");
@@ -137,7 +188,7 @@ class Menu{
         audioPlayer.src = source.src;
         audioPlayer.play();
     }
-    toast({level, title, message, sound=true}){
+    toast({level, title, message, time=2500, sound=true}){
         let _level = level;
         if(_level == "danger") _level = "error";
         if(_level == "primary") _level = "success";
@@ -149,7 +200,7 @@ class Menu{
             toast: true,
             position: 'top',
             showConfirmButton: false,
-            timer: 2500
+            timer: time
         }) 
         if(sound) this.playSound(level);
     }
@@ -168,5 +219,22 @@ class Menu{
             $("#expiration").addClass("d-none")
         }
         return false;
+    }
+    //se debe llamar a esta funcion cada vez q se agrega una tabla al DOM
+    setTheadDynamic(){
+        $("table").each((ind, el)=>{
+            let table = $(el);
+            table.off("mouseenter mouseleave");
+            table.removeAttr("thead-mode-dynamic");
+            
+            if(this.theadMode == 2){
+                table.attr("thead-mode-dynamic", true);
+                table.on("mouseenter", ()=>{
+                    table.find("th").addClass("thead-mode-dynamic");
+                }).on("mouseleave", ()=>{
+                    table.find("th").removeClass("thead-mode-dynamic");
+                });
+            }
+        })
     }
 }

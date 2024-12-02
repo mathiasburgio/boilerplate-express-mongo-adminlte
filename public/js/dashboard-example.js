@@ -1,4 +1,4 @@
-class Dashboard{
+class DashboardExample{
     constructor(){
         boilerplate();
         this.dropDownSearcher();
@@ -7,6 +7,7 @@ class Dashboard{
         this.expirationBar();
         this.qr();
         this.barcode();
+        this.superExcel();
 
         $('.main-header [data-toggle="tooltip"]').tooltip();
         menu.hideCortina();
@@ -63,8 +64,31 @@ class Dashboard{
             console.log(ret);
         })
     }
-    getSuperExcel(){
-
+    superExcel(){
+        $("[excel='writeTable']").click(async ev=>{
+            let se = new SuperExcel();
+            await se.loadFromUrl("http://localhost:3000/resources/test-excel.xlsx");
+            let ar = [
+                {nombre: "coli", genero: "femenino", raza: "perro", edad: 10},
+                {nombre: "chapita", genero: "masculino", raza: "gato", edad: 7},
+                {nombre: "verdoso", genero: "masculino", raza: "lagarto", edad: 23},
+            ];
+            console.log(se.currentFile);
+            se.writeTable(ar, se.currentFile.getWorksheet("Hoja1").getCell("C10"));
+            se.exportFile("test1");
+        })
+        $("[excel='writeTableFromHTMLTable']").click(async ev=>{
+            let se = new SuperExcel();
+            await se.loadFromUrl("http://localhost:3000/resources/test-excel.xlsx");
+            let ar = [
+                {nombre: "coli", genero: "femenino", raza: "perro", edad: 10},
+                {nombre: "chapita", genero: "masculino", raza: "gato", edad: 7},
+                {nombre: "verdoso", genero: "masculino", raza: "lagarto", edad: 23},
+            ];
+            console.log(se.currentFile);
+            se.writeTableFromHTMLTable("[name='tabla-excel']", se.currentFile.getWorksheet("Hoja1").getCell("C10"));
+            se.exportFile("test1");
+        })
     }
     printDocument(){
 

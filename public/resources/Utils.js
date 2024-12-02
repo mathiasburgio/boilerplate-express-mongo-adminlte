@@ -2,6 +2,9 @@ class Utils{
     constructor(){
         this.isMobile = $(document).width() > 1024;
     }
+    isJquery(element){
+        return element instanceof jQuery;
+    }
     sleep(ms=1000){
         return new Promise(resolve=>{
             setTimeout(()=>resolve(true), ms);
@@ -208,20 +211,26 @@ class Utils{
         
         xhr.send(formData);
     }
-    uploadFileButton({url, file, button, onFinish=null}){
-        button.click(ev=>{
-            button.addClass("disable");
-            let text = button.html();
-            this.uploadFileButton({
-                url: url, 
-                file: file,
-                onProgress: porc =>{
-                    button.html(`${text} ${porc.toFixed(0)}%`);
-                },
-                onFinish: (ret, responseText) =>{
-                    if(onFinish) onFinish(ret, responseText, text);
-                }
-            })
+    uploadButton({url, input, button, onFinish=null}){
+        let _input = (input instanceof jQuery == false) ? $(input) : input;
+        let _button = (button instanceof jQuery == false) ? $(button) : button;
+        
+        let file = _input[0].files[0];
+        if(!file) return;
+
+        _button.prop("disabled", true);
+        _button.append(`<span name='upload-progress'>0%</span>`);
+        let spanProgress = _button.find("[name='upload-progress']");
+        
+        this.uploadFileWithProgress({
+            url, 
+            file, 
+            onProgress: p =>{
+                spanProgress.html(p.toFixed(0) + "%");
+            },
+            onFinish: (ret, responseText) => {
+                if(onFinish) onFinish(ret, responseText);
+            }
         })
     }
     saveFile(content, name= "file.txt", type= "text/plain;charset=utf-8",) {

@@ -161,6 +161,26 @@ async function uploadFile({file, localPath, }){
         return null;
     }
 }
+async function getFilesInfo(folderPath){
+    const files = await fs.readdir(folderPath);
+
+    const filesInfo = await Promise.all(
+        archivos.map(async (file) => {
+            const filePath = path.join(folderPath, file);
+            const stats = await fs.stat(filePath);
+            return {
+                nombre: file,
+                path: filePath,
+                mtime: stats.mtime, // Modification time
+                birthtime: stats.birthtime, // Creation time
+                isFile: stats.isFile(),
+                size: 1024,
+            };
+        })
+    );
+
+    return filesInfo;
+}
 module.exports = {
     encryptString,
     decryptString,
@@ -174,5 +194,6 @@ module.exports = {
     downloadFile,
     api,
     safeString,
-    uploadFile
+    uploadFile,
+    getFilesInfo
 };
