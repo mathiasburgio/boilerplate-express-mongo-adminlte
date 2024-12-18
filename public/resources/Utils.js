@@ -1,6 +1,6 @@
 class Utils{
     constructor(){
-        this.isMobile = $(document).width() > 1024;
+        this.isMobile = $(document).width() < 1024;
     }
     isJquery(element){
         return element instanceof jQuery;
@@ -265,25 +265,34 @@ class Utils{
         return ret;
     }
     bindShowPasswordEvent( buttonElement, inputElement ){
-        const _showPassword = (show=false) => {
-            if(show){
+        const _showPassword = (show=null) => {
+            if(show === null){//toggle
+                _showPassword( inputElement.prop("type") == "password" )
+            }else if(show === true){
                 buttonElement.find("i").addClass("fa-eye").removeClass("fa-eye-slash");
                 buttonElement.addClass("btn-warning").removeClass("btn-light");
                 inputElement.prop("type", "text");
-            }else{
+            }else if(show === false){
                 buttonElement.find("i").addClass("fa-eye-slash").removeClass("fa-eye");
                 buttonElement.addClass("btn-light").removeClass("btn-warning");
                 inputElement.prop("type", "password");
+            }else{
+                
             }
         }
-
-        buttonElement.mousedown(ev=>{
-            _showPassword(true);
-        }).mouseup(ev=>{
-            _showPassword(false);
-        }).mouseleave(ev=>{
-            _showPassword(false);
-        });
+        if(this.isMobile){
+            buttonElement.click(ev=>{
+                _showPassword(null);
+            })
+        }else{
+            buttonElement.mousedown(ev=>{
+                _showPassword(true);
+            }).mouseup(ev=>{
+                _showPassword(false);
+            }).mouseleave(ev=>{
+                _showPassword(false);
+            })
+        }
         
     }
     getQR({text, size=128, color="#000000", background="#ffffff"}, container=null){
