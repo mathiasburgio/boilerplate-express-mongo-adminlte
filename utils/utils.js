@@ -3,11 +3,12 @@ const fs = require("fs");
 const path = require("path");
 const { add } = require('node-7z');
 const FormData = require("form-data");
+const crypto = require("crypto");
 
 function encryptString(str, prefix=false){
     str = str.toString().trim();
     if(str == ""){return "";}
-    let cipher = crypto.createCipheriv(crypto_options.algorithm, crypto_options.ENC_KEY, crypto_options.IV);
+    let cipher = crypto.createCipheriv(process.env.CRYPTO_ALGORITHM, process.env.CRYPTO_ENC_KEY, process.env.CRYPTO_IV);
     let encrypted = cipher.update(str, 'utf8', 'base64');
     encrypted += cipher.final('base64');
     return encrypted + (prefix ? "__ENC__" : "");
@@ -17,7 +18,7 @@ function decryptString(str, prefix=false){
     if(prefix && str.substring(str.length - 7) != "__ENC__") return null;
     str = str.substring(0,str.length - 7);
     if(str == ""){return "";}
-    let decipher = crypto.createDecipheriv(crypto_options.algorithm, crypto_options.ENC_KEY, crypto_options.IV);
+    let decipher = crypto.createDecipheriv(process.env.CRYPTO_ALGORITHM, process.env.CRYPTO_ENC_KEY, process.env.CRYPTO_IV);
     let decrypted = decipher.update(str, 'base64', 'utf8');
     return (decrypted + decipher.final('utf8'));
 }
@@ -169,12 +170,12 @@ async function getFilesInfo(folderPath){
             const filePath = path.join(folderPath, file);
             const stats = await fs.stat(filePath);
             return {
-                nombre: file,
+                name: file,
                 path: filePath,
                 mtime: stats.mtime, // Modification time
                 birthtime: stats.birthtime, // Creation time
                 isFile: stats.isFile(),
-                size: 1024,
+                size: stats.size,
             };
         })
     );

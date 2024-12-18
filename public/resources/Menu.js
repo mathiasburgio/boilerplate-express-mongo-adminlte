@@ -38,7 +38,7 @@ class Menu{
         $(".nav-logout").click(async()=>{
             let resp = await modal.pregunta(`¿Confirma <b>cerrar sesión</b>?`);
             if(!resp) return;
-            window.location.href = "/user/logout";
+            window.location.href = "/users/logout";
         })
     }
     setPageName(title, name=null){
@@ -204,7 +204,7 @@ class Menu{
         }) 
         if(sound) this.playSound(level);
     }
-    expiration(expirationDate=null){
+    setExpiration(expirationDate=null){
         let days = fechas.diff_days(new Date(), expirationDate);
         if(days <= 0){
             let fox = `<b>Suscripción vencida</b> renuevala hacienco clic en `;

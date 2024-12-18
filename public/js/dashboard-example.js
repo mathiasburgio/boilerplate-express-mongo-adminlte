@@ -100,19 +100,19 @@ class DashboardExample{
     }
     expirationBar(){
         $("[expiration-bar='2050-01-01']").click(ev=>{
-            menu.expiration("2050-01-01");
+            menu.setExpiration("2050-01-01");
             $("body, html").scrollTop(0)
         })
         $("[expiration-bar='5']").click(ev=>{
             let fx = new Date();
             fx.setDate(fx.getDate() +5);
-            menu.expiration(fx);
+            menu.setExpiration(fx);
             $("body, html").scrollTop(0)
         })
         $("[expiration-bar='-3']").click(ev=>{
             let fx = new Date();
             fx.setDate(fx.getDate() -3);
-            menu.expiration(fx);
+            menu.setExpiration(fx);
             $("body, html").scrollTop(0)
         })
     }

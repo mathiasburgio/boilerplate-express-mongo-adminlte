@@ -8,9 +8,10 @@ const rateLimit = require("express-rate-limit");
 */
 const checkPermissions = ({level=0, permission=null}) => {
 	return (req, res, next)=>{
+		console.log(req.session.data);
 		if(typeof level === "number"){//verifico q este completado el parametro nivel
 			if(level === 3){//super-admin (mathias)
-				if(req?.session?.email != process.env.EMAIL_SUPER_ADMIN) return res.status(401).send("Usted no es el super-admin.");
+				if(req?.session?.data?.email != process.env.EMAIL_SUPER_ADMIN) return res.status(401).send("Usted no es el super-admin.");
 			}else if(level === 2){//usuario-admin
 				if( req.session?.data?.isAdmin !== true ) return res.status(401).send("El usuario no tiene el NIVEL necesario para realizar esta acción.");
 			}else if(level === 1){//usuario-logueado
@@ -21,8 +22,8 @@ const checkPermissions = ({level=0, permission=null}) => {
 		}
 		
 		if(permission){
-			if(Array.isArray(req?.session?.permissions) == false) return res.status(401).send("El usuario no tiene los PERMISOS necesarios para realizar esta acción."); 
-			if(req.session.permission.includes("*") == false && req.session.permission.includes(permission) == false) return res.status(401).send("El usuario no tiene los PERMISOS necesarios para realizar esta acción."); 
+			if(Array.isArray(req?.session?.data?.permissions) == false) return res.status(401).send("El usuario no tiene los PERMISOS necesarios para realizar esta acción."); 
+			if(req.session.data.permissions.includes("*") == false && req.session.data.permissions.includes(permission) == false) return res.status(401).send("El usuario no tiene los PERMISOS necesarios para realizar esta acción."); 
 		}
 		next();
 	}

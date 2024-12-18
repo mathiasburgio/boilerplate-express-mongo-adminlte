@@ -32,6 +32,7 @@
                 //console.log(resp);
                 primordial = resp;
                 menu.setPermissions(primordial.permissions)
+                menu.setExpiration(primordial?.expiration)
             }catch(err){
                 alert(err.toString());
             }

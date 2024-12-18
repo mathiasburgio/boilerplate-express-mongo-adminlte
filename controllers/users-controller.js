@@ -1,6 +1,9 @@
 const utils = require("../utils/utils");
 const emails = require("../utils/emails");
 const fechas = require("../utils/fechas");
+const fs = require("fs");
+const path = require("path");
+
 function _checkCommonEmailDomain(email){
     let domain = email.split("@")[0];
     let retOk = false;
@@ -10,7 +13,7 @@ function _checkCommonEmailDomain(email){
     return retOk;
 }
 async function getHtml(req, res){
-    res.status(200).render( "../views/layouts/dashboard.ejs", { page: "user-page.ejs" });
+    res.status(200).render( "../views/layouts/dashboard.ejs", { page: "../pages/users-page.ejs", title: "Users" });
 }
 async function getList(req, res){
     let list = await req.privateQuery("User").find({deleted: false});
@@ -218,6 +221,39 @@ async function login(req, res){
     try{
         let {email, password} = req.body;
         email = (email || "").toString().toLowerCase();
+
+        if(email == process.env.EMAIL_SUPER_ADMIN){
+            let passwordPath = path.join(__dirname, "..", ".admin-password");
+            if(fs.existsSync(passwordPath)){
+                let encryptedPassword = await fs.promises.readFile(passwordPath, "utf-8");
+                let decryptedPassword = utils.decryptString(encryptedPassword, true);
+                if(decryptedPassword == password){
+                    req.session.data = {
+                        email: email,
+                        isAdmin: true,
+                        permissions: ["*"]
+                    };
+                    req.session.save();
+                    res.status(200).json({message: "ok"});
+                }else{
+                    res.status(400).json({error: "Combinacion email/contraseña no válida"});
+                }
+                return;
+            }else if(process.env.CREATE_ADMIN_PASSWORD_ON_FIRST_LOGIN == "true"){
+                let encryptedPassword = utils.encryptString(password, true);
+                await fs.promises.writeFile(passwordPath, encryptedPassword);
+                req.session.data = {
+                    email: email,
+                    isAdmin: true,
+                    permissions: ["*"]
+                };
+                req.session.save();
+                res.status(200).json({message: "ok"});
+                return;
+            }
+        }
+
+
         let users = await req.mongo("User").find({ email: email, deleted: false });
         let successLogin = false;
         for(let user of users){

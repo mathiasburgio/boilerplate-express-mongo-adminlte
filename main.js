@@ -73,6 +73,7 @@ app.use((req, res, next)=>{
     req.getPrimordial = async (req) => {
         let data = {
             fx: fechas.getNow(true),
+            expiration: new Date()
         };
         if(req.session?.data){
             data.email = req.session.data.email;
