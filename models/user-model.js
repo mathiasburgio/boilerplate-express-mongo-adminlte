@@ -11,7 +11,8 @@ const userSchema = new mongoose.Schema({
     resetPassword: {
         requestAt: Date,
         token: String
-    }
+    },
+    lastAccess: Date,
 }, { timestamps: true });
 
 module.exports = userSchema; 

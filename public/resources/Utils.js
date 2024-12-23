@@ -117,8 +117,14 @@ class Utils{
         if(decimales){
             return aux.join("") + sdecimal + decimales;
         }else{
-            return aux.join("") + sdecimal + "00";
+            return aux.join("");//devuelvo sin decimales
+            //return aux.join("") + sdecimal + "00"; //fuerza a devolver 2 decimales
         }
+    }
+    formatNumber(str, dec=0){
+        str = str.toString();
+        let v = dec >= 0 ? this.decimals(str, dec) : parseInt(str);
+        return this.formatNumberWithSeparators(v);
     }
     getOptions({ar, text, value=null, selected=null}){
         let htmlOptions = "";
@@ -126,12 +132,12 @@ class Utils{
             let _selected = false;
             let _text;
             let _value;
-            if(typeof ar[item] == "object"){
-                _text = ar[item][text];
-                _value = value ? ar[item][value] : _text;
+            if(typeof item == "object"){
+                _text = item[text];
+                _value = value ? item[value] : _text;
             }else{
-                _text = ar[item];
-                _value = ar[item];
+                _text = item;
+                _value = item;
             }
 
             if(selected === _value) _selected = true;

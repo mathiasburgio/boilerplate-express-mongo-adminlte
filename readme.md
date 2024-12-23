@@ -87,7 +87,6 @@
 - [ ] **Agregar servicio de emails**
 - [ ] **Integrar cobros con MercadoPago**
 - [ ] **Agregar inicio de sesión con Google**
-- [ ] **Agregar robots.txt y sitemap**
 - [ ] **Agregar notificaciones push**
 - [ ] **Agregar soporte PWA**
 - [ ] **Integrar Socket.io para tiempo real**

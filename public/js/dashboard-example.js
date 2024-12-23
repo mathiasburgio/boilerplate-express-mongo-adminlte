@@ -9,7 +9,6 @@ class DashboardExample{
         this.barcode();
         this.superExcel();
 
-        $('.main-header [data-toggle="tooltip"]').tooltip();
         menu.hideCortina();
     }
     dropDownSearcher(){

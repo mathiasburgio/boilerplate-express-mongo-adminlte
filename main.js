@@ -10,6 +10,12 @@ const favicon = require('serve-favicon');
 const fechas = require("./utils/fechas.js");
 const utils = require("./utils/utils")
 const fs = require("fs");
+
+//cache control
+const cacheControl = require("./utils/cacheControl");
+//agregue aqui los controllers que requieren cache
+const usersController = require("./controllers/users-controller.js");
+
 require('dotenv').config();
 
 /*
@@ -29,12 +35,22 @@ app.use(session({
         sameSite: true,
         //secure : !(process.env.NODE_ENV == 'development') // true ssl
     },
-    store: MongoStore.create({ mongoUrl: process.env.MONGO_SESSION_URI })
+    store: MongoStore.create({ mongoUrl: process.env.MONGO_URI + "_sessions" })
 }));
 
 app.use( favicon(__dirname + "/public/resources/icon.ico") );
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+//Crea las carpetas neecesarias para el sistema
+let directories = [
+    path.join(__dirname, "uploads"),
+    path.join(__dirname, "uploads", "temp"),
+    path.join(__dirname, "uploads", "images"),
+];
+directories.forEach(directory=>{
+    if(fs.existsSync(directory) == false) fs.mkdirSync( directory )
+})
 
 //cors
 if(process.env?.CORS === "true") app.use(cors());
@@ -49,12 +65,15 @@ app.use("/resources", express.static( path.join(__dirname + "/public/resources")
 
 //conecta a la base de datos y cargo los modelos
 let conn = null;
-db().then(ret=>{ 
+db().then(async ret=>{ 
     conn = ret; 
     conn.model('User', require("./models/user-model.js"));
     conn.model('Client', require("./models/client-model.js"));
     conn.model('Company', require("./models/company-model.js"));
     conn.model('Config', require("./models/config-model.js"));
+
+    await usersController.populateCache(conn, cacheControl);
+    console.log("Cache load");
 })
 
 //middlewares
@@ -113,15 +132,17 @@ app.use((req, res, next)=>{
     req.mongoDB = conn;
     //conexion directa simplificada a la base de datos
     req.mongo = (model) => conn.models[model];
+    //acceso al cache
+    req.cacheControl = cacheControl;
     next();
 })
 
 //routes
-app.use(require("./routes/client-routes"));
-app.use(require("./routes/company-routes"));
+app.use(require("./routes/clients-routes"));
+app.use(require("./routes/companies-routes"));
 app.use(require("./routes/config-routes"));
 app.use(require("./routes/dashboard-routes"));
-app.use(require("./routes/user-routes"));
+app.use(require("./routes/users-routes"));
 
 //ping para control
 app.get("/ping", (req, res)=>{
@@ -144,6 +165,14 @@ app.get("/", (req, res)=>{
 app.get("/primordial", async (req, res)=>{
     let resp = await req.getPrimordial(req);
     res.status(200).json(resp);
+})
+
+app.get(["/robots", "/robots.txt"], (req, res)=>{
+    res.sendFile( path.join(__dirname, "public", "robots.txt") );
+})
+
+app.get(["sitemap", "/sitemap.xml"], (req, res)=>{
+    res.sendFile( path.join(__dirname, "public", "sitemap.xml") );
 })
 
 //manejo de 404

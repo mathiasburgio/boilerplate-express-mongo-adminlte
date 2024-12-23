@@ -12,6 +12,22 @@ function _checkCommonEmailDomain(email){
     })
     return retOk;
 }
+async function populateCache(conn, cacheControl){
+    let users = await conn.model("User").find({deleted: false});
+    for(let user of users){
+        updateCacheItem(cacheControl, user.toObject());
+    }
+}
+function updateCacheItem(cacheControl, object){
+    cacheControl.setItem("users", {
+        _id: object._id,
+        email: object.email,
+        permissions: object.permissions,
+        isAdmin: object.isAdmin,
+        isChild: object.isChild
+    });
+}
+
 async function getHtml(req, res){
     res.status(200).render( "../views/layouts/dashboard.ejs", { page: "../pages/users-page.ejs", title: "Users" });
 }
@@ -22,7 +38,7 @@ async function getList(req, res){
 async function create(req, res){//Esta funcion solo deberia utilizarse para sofwares de 1 solo usuario
     try{
         let {email, password, companyId} = req.body;
-        email = (email || "").toString().toLowerCase();
+        email = (email || "").toString().toLowerCase().trim();
     
         if(!email || utils.validateString(email, "email") == false){
             res.status(400).json({error: "Email no válido"});
@@ -61,6 +77,8 @@ async function create(req, res){//Esta funcion solo deberia utilizarse para sofw
             permissions: user.permissions
         };
         req.session.save();
+
+        updateCacheItem(req.cacheControl, user);
     
         res.status(201).json({message: "ok"});
     }catch(err){
@@ -138,7 +156,7 @@ async function createUserAndCompany(req, res){
 async function createChild(req, res){
     try{
         let {email, password} = req.body;
-        email = (email || "").toString().toLowerCase();
+        email = (email || "").toString().toLowerCase().trim();
         let autoPassword = false;//asignar true para que se generen automaticamente las contraseñas
     
         if(!email || utils.validateString(email, "email") == false){
@@ -164,7 +182,9 @@ async function createChild(req, res){
             isAdmin: false,
             deleted: false
         });
-        
+
+        updateCacheItem(req.cacheControl, user);
+
         res.status(201).json({email, password: (autoPassword ? password : null)});
     }catch(err){
         await req.writeLog(req, err.toString(), true);
@@ -193,6 +213,8 @@ async function updateChild(req, res){
             isAdmin: (isAdmin === true) || false,
             permissions: permissions
         }, {new: true});
+
+        updateCacheItem(req.cacheControl, updated);
 
         //no devolver el updated, ya que contiene la contraseña
         res.status(200).json({message: "ok"});
@@ -272,6 +294,8 @@ async function login(req, res){
             }
         }
         if(successLogin){
+            user.lastAccess = new Date();
+            await user.save();
             res.status(200).json({message: "ok"});
         }else{
             res.status(400).json({error: "Combinacion email/contraseña no válida"});
@@ -284,7 +308,11 @@ async function login(req, res){
 }
 async function logout(req, res){
     req.session.destroy();
-    res.redirect("/");
+    if(req.method === 'GET'){
+        res.redirect("/");
+    }else{
+        res.status(200).end("ok");
+    }
 }
 async function requestPasswordChange(req, res){
     try{
@@ -352,6 +380,7 @@ async function changePassword(req, res){
     }
 }
 module.exports = {
+    populateCache,
     getHtml,
     getList,
     create,

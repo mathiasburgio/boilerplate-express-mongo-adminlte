@@ -35,6 +35,11 @@ class Menu{
             }
         });
 
+        $('.main-header [data-toggle="tooltip"]').tooltip();
+
+        let menuSelectedItem = $("[href='" + window.location.pathname + "']");
+        if(menuSelectedItem.length == 1) menuSelectedItem.addClass("active");
+
         $(".nav-logout").click(async()=>{
             let resp = await modal.pregunta(`¿Confirma <b>cerrar sesión</b>?`);
             if(!resp) return;
@@ -144,10 +149,12 @@ class Menu{
             $("#toggle-dark-mode").removeClass("btn-outline-warning").addClass("btn-secondary");
             $("#toggle-dark-mode i").removeClass("fa-sun").addClass("fa-moon");
             $("body").addClass("dark-mode");
+            $(".main-header").addClass("navbar-dark").removeClass("navbar-white");
         }else{
             $("#toggle-dark-mode").removeClass("btn-secondary").addClass("btn-outline-warning");
             $("#toggle-dark-mode i").removeClass("fa-moon").addClass("fa-sun");
             $("body").removeClass("dark-mode");
+            $(".main-header").addClass("navbar-white").removeClass("navbar-dark");
         }
     }
     setTheadMode(v=null){

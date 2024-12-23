@@ -1,12 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const clientController = require("../controllers/client-controller");
+const clientsController = require("../controllers/clients-controller");
 const middlewares = require("../utils/middlewares");
 
-router.get("/client", middlewares.checkPermissions({permission:"clients"}), clientController.getHtml);
-router.get("/client/get-list", middlewares.checkPermissions({permission:"clients"}), clientController.getList);
-router.post("/client/create", middlewares.checkPermissions({permission:"clients"}), clientController.create);
-router.put("/client/update-one", middlewares.checkPermissions({permission:"clients"}), clientController.updateOne);
-router.delete("/client/delete-one", middlewares.checkPermissions({permission:"clients"}), clientController.deleteOne);
+router.get("/clients", middlewares.checkPermissions({permission:"clients"}), clientsController.getHtml);
+router.get("/clients/get-list", middlewares.checkPermissions({permission:"clients"}), clientsController.getList);
+router.post("/clients/create", middlewares.checkPermissions({permission:"clients"}), clientsController.create);
+router.put("/clients/update-one", middlewares.checkPermissions({permission:"clients"}), clientsController.updateOne);
+router.delete("/clients/delete-one", middlewares.checkPermissions({permission:"clients"}), clientsController.deleteOne);
 
 module.exports = router;
