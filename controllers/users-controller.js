@@ -19,12 +19,13 @@ async function populateCache(conn, cacheControl){
     }
 }
 function updateCacheItem(cacheControl, object){
+    let elementToSave = object?.toObject ? object.toObject() : object; 
     cacheControl.setItem("users", {
-        _id: object._id,
-        email: object.email,
-        permissions: object.permissions,
-        isAdmin: object.isAdmin,
-        isChild: object.isChild
+        _id: elementToSave._id,
+        email: elementToSave.email,
+        permissions: elementToSave.permissions,
+        isAdmin: elementToSave.isAdmin,
+        isChild: elementToSave.isChild
     });
 }
 
