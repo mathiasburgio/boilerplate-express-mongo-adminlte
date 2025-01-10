@@ -116,7 +116,7 @@ app.use((req, res, next)=>{
             countDocuments: (query, ...args) => modelInstance.countDocuments({...query, [dbPrivateKey]: req.session.data[dbPrivateKey]}, ...args),
             find: (query, ...args) => modelInstance.find({ ...query, [dbPrivateKey]: req.session.data[dbPrivateKey] }, ...args),
             findOne: (query, ...args) => modelInstance.findOne({ ...query, [dbPrivateKey]: req.session.data[dbPrivateKey] }, ...args),
-            create: (data) => modelInstance.create({[dbPrivateKey]: req.session.data[dbPrivateKey], ...data}, ...args),
+            create: (data) => modelInstance.create({...data, [dbPrivateKey]: req.session.data[dbPrivateKey]}, ...args),
             findOneAndUpdate: (query, update, ...args) => {
                 delete update[dbPrivateKey];
                 return modelInstance.findOneAndUpdate({ ...query, [dbPrivateKey]: req.session.data[dbPrivateKey] }, update, ...args);
