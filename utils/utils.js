@@ -130,7 +130,7 @@ async function api(url, method='GET', body=null){
     let data = await response.json();
     return data;
 }
-function safeString(str, remove = ["`", "´", "'", '"']){
+function safeString(str, remove = ["`", "´", "'", '"', "<", ">"]){
     str = (str || "").toString();
     (remove || []).forEach(rm=>{
         str = str.replaceAll(rm, "");
@@ -182,6 +182,26 @@ async function getFilesInfo(folderPath){
 
     return filesInfo;
 }
+function decimals(val, dec=2){
+    return Number( val.toFixed(dec) );
+}
+function splitAmountByPercentage(mount, percent, returnBase=false){
+    let aux = mount / (1 + (percent / 100));
+    return decimals(returnBase ? aux : mount - aux);
+}
+function reverserPercent(mount, percent){
+    let base = splitAmountByPercentage(mount, percent, true);
+    return {base: base, percent: mount - base};
+}
+
+//verify if value is number
+function getNumber(v, def=null){
+    if(typeof v == "undefined" || v === "" || v === null) return def;
+    return isNaN(v) ? def : Number(v);
+}
+function getBoolean(v){
+    return (v === "true" || v === true || v === "1" || v === 1);
+}
 module.exports = {
     encryptString,
     decryptString,
@@ -196,5 +216,9 @@ module.exports = {
     api,
     safeString,
     uploadFile,
-    getFilesInfo
+    getFilesInfo,
+    decimals,
+    splitAmountByPercentage,
+    reverserPercent,
+    getNumber
 };

@@ -11,10 +11,9 @@ const fechas = require("./utils/fechas.js");
 const utils = require("./utils/utils")
 const fs = require("fs");
 
-//cache control
-const cacheControl = require("./utils/cacheControl");
-//agregue aqui los controllers que requieren cache
-const usersController = require("./controllers/users-controller.js");
+//para cache control
+const emprendimientosController = require("./controllers/emprendimientos-controller.js");
+const usuariosController = require("./controllers/usuarios-controller.js");
 
 require('dotenv').config();
 
@@ -89,7 +88,8 @@ app.use((req, res, next)=>{
         return;
     }
     //completar aquí con el script que recupere la informacion primordial para el uso del sistema.
-    req.getPrimordial = async (req) => {
+    req.getPrimordial = (req) => {
+        //agregar aqui los cacheControl necesarios
         let data = {
             fx: fechas.getNow(true),
             expiration: new Date()
@@ -105,7 +105,7 @@ app.use((req, res, next)=>{
         return data;
     }
     //asegura consultas a base de datos basadas con filtro por dbPrivateKey (companyId) 
-    req.privateQuery = (model) => {
+    req.safeQuery = (model) => {
         const modelInstance = conn.models[model];
 
         if (!modelInstance) {
@@ -113,23 +113,21 @@ app.use((req, res, next)=>{
         }
 
         return {
-            countDocuments: (query, ...args) => modelInstance.countDocuments({[dbPrivateKey]: req.session.data[dbPrivateKey],...query}, ...args),
-            find: (query, ...args) => modelInstance.find({ [dbPrivateKey]: req.session.data[dbPrivateKey], ...query }, ...args),
-            findOne: (query, ...args) => modelInstance.findOne({ [dbPrivateKey]: req.session.data[dbPrivateKey], ...query }, ...args),
+            countDocuments: (query, ...args) => modelInstance.countDocuments({...query, [dbPrivateKey]: req.session.data[dbPrivateKey]}, ...args),
+            find: (query, ...args) => modelInstance.find({ ...query, [dbPrivateKey]: req.session.data[dbPrivateKey] }, ...args),
+            findOne: (query, ...args) => modelInstance.findOne({ ...query, [dbPrivateKey]: req.session.data[dbPrivateKey] }, ...args),
             create: (data) => modelInstance.create({[dbPrivateKey]: req.session.data[dbPrivateKey], ...data}, ...args),
             findOneAndUpdate: (query, update, ...args) => {
                 delete update[dbPrivateKey];
-                return modelInstance.findOneAndUpdate({ [dbPrivateKey]: req.session.data[dbPrivateKey], ...query }, update, ...args);
+                return modelInstance.findOneAndUpdate({ ...query, [dbPrivateKey]: req.session.data[dbPrivateKey] }, update, ...args);
             },
             updateOne: (query, update, ...args) => {
                 delete update[dbPrivateKey];
-                modelInstance.updateOne({ [dbPrivateKey]: req.session.data[dbPrivateKey], ...query }, update, ...args);
+                modelInstance.updateOne({ ...query, [dbPrivateKey]: req.session.data[dbPrivateKey] }, update, ...args);
             },
-            deleteOne: (query, ...args) => modelInstance.deleteOne({ [dbPrivateKey]: req.session.data[dbPrivateKey], ...query }, ...args),
+            deleteOne: (query, ...args) => modelInstance.deleteOne({ ...query, [dbPrivateKey]: req.session.data[dbPrivateKey] }, ...args),
         }
     };
-    //conexion directa a la base de datos
-    req.mongoDB = conn;
     //conexion directa simplificada a la base de datos
     req.mongo = (model) => conn.models[model];
     //acceso al cache

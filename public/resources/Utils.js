@@ -52,22 +52,12 @@ class Utils{
         return  parseFloat( parseFloat(str).toFixed(dec) );
     }
     getUrlQuery(){
-        let aux = window.location.href.split("#")[0];
-        let query = aux.split("?");
-        if(query.length > 1){
-            let ret = {};
-            let pares = query[0].split("&");
-            for(let par of pares){
-                let keyValue = par.split("=");
-                if(keyValue.length == 2){
-                    ret[par[0]] = par[1];
-                }else{
-                    ret[par[0]] = true;
-                }
-            }
-            return ret;
-        }
-        return null;
+        let params = {};
+        window.location.search.substring(1).split("&").forEach(param=>{
+            let [key, value] = param.split("=");
+            params[key] = value ? value : key;
+        });
+        return params;
     }
     copyToClipboard(val, contenedor=null){
         if(navigator?.clipboard?.writeText){
@@ -326,5 +316,17 @@ class Utils{
             container.find("img").removeClass("d-none");
         }
         return img;
+    }
+    scrollTo(element){
+        let $target = null; 
+        if(element instanceof jQuery){
+            $target = element;
+        }else{
+            $target = $(element);
+        }
+        if(!$target.length) return;
+        $('html, body').animate({
+            scrollTop: $target.offset().top
+        }, 500);
     }
 }
