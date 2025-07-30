@@ -6,22 +6,16 @@ function getItem(store, objectId){
 
 function setItem(store, object, idProperty="_id"){
     if( !cache?.[store] ) cache[store] = {};
-    cache[store][ object[idProperty] ] = {...object, cacheTime: new Date()};
+    if(object?.toObject) object = object.toObject();//verifica si se intenta guardar un objeto de mongoose
+    cache[store][ object[idProperty] ] = {...object, _cacheCreatedAt: new Date()};
 }
 
-function actualizarUsuario(objUsuario){
-    cacheUsuarios[objUsuario._id] = { 
-        email, 
-        permisos, 
-        esAdmin, 
-        esHijo 
-    };
-}
-function actualizarEmprendimiento(objEmprendimiento){
-    cacheEmprendimientos[objEmprendimiento._id] = objEmprendimiento;
+function getCache(store){
+    return store ? cache[store] : cache;
 }
 
 module.exports = {
     getItem,
-    setItem
+    setItem,
+    getCache
 }

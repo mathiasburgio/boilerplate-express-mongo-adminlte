@@ -161,7 +161,8 @@ class Utils{
         str = str.replaceAll("Ú", "u");
         str = str.replaceAll("ñ", "n");
         str = str.replaceAll("Ñ", "n");
-        str = str.replace(/[^a-z0-9 -\_\.]/gi, '').toLowerCase().trim();
+        str = str.replace(/[^a-z0-9 _\-.]/gi, '').toLowerCase().trim();
+        str = str.replaceAll("  ", " ");//quita el doble espacio
         if(noSpaces){
             return str.replaceAll(" ", "-")
         }else{
@@ -328,5 +329,22 @@ class Utils{
         $('html, body').animate({
             scrollTop: $target.offset().top
         }, 500);
+    }
+    splitAmountByPercentage(mount, percent, returnBase=false){
+        let aux = mount / (1 + (percent / 100));
+        return this.decimals(returnBase ? aux : mount - aux);
+    }
+    reverserPercent(mount, percent){
+        let base = this.splitAmountByPercentage(mount, percent, true);
+        return {base: base, percent: mount - base};
+    }
+    
+    //verify if value is number
+    getNumber(v, def=null){
+        if(typeof v == "undefined" || v === "" || v === null) return def;
+        return isNaN(v) ? def : Number(v);
+    }
+    getBoolean(v){
+        return (v === "true" || v === true || v === "1" || v === 1);
     }
 }

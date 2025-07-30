@@ -85,3 +85,16 @@ body.thead-mode-sticky table th{
     position: sticky;
     top:0;
 }
+
+.table-hover-primary:hover{
+    background-color: #b8daff !important;
+}
+.table-hover-warning:hover{
+    background-color: #ffeeba !important;
+}
+.table-hover-danger:hover{
+    background-color: #f5c6cb !important;
+}
+.table-hover-info:hover{
+    background-color: #d1ecf1 !important;
+}

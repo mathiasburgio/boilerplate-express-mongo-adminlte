@@ -1,5 +1,13 @@
 class Menu{
     constructor(){
+
+        this.animations = (localStorage.getItem("animations") === "true");
+        this.setAnimations(this.animations);
+        $("#toggle-animations").click(ev=>{
+            this.setAnimations()
+            this.toast({level: "info", title: `Animaciones`, message: this.animations ? "Animaciones activadas" : "Animaciones desactivadas", time:4000})
+        });
+        
         this.THEAD_MODES = ["normal", "sticky", "dynamic"];
         this.sounds = (localStorage.getItem("sounds") === null || localStorage.getItem("sounds") === "true");
         this.setSounds(this.sounds);
@@ -109,6 +117,21 @@ class Menu{
                 if(permissions.includes("*") == false && permissions.includes(permission) == false) ele.addClass("d-none");
             }
         })
+    }
+    setAnimations(enable=null){
+        if(enable === true) this.animations = true;
+        else if(enable === false) this.animations = false;
+        else this.animations = !this.animations;
+        if(modal?.setAnimation) modal.setAnimation(this.animations); //verifico ya que quizas no esta instanciado aun
+        
+        localStorage.setItem("animations", (this.animations).toString());
+        if(this.animations){
+            $("#toggle-animations").removeClass("btn-light").addClass("btn-primary");
+            $("#toggle-animations i").removeClass("fa-pause").addClass("fa-play");
+        }else{
+            $("#toggle-animations").removeClass("btn-primary").addClass("btn-light");
+            $("#toggle-animations i").removeClass("fa-play").addClass("fa-pause");
+        }
     }
     setUpperCase(enable=null){
         if(enable === true) this.upperCase = true;

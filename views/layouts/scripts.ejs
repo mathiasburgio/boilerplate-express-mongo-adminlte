@@ -26,6 +26,9 @@
         modal = new Modal();
         utils = new Utils();
         menu = new Menu();
+
+        if(modal?.setAnimation && menu.animations != null) modal.setAnimation(menu.animations);
+        
         if(loadPrimordial){
             try{
                 let resp = await $.get({url: "/primordial"});
