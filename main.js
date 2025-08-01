@@ -1,5 +1,6 @@
 const express = require("express")
 const app = express();
+const compression = require("compression");
 const session = require("express-session");
 const MongoStore = require('connect-mongo');
 const bodyParser = require("body-parser");
@@ -37,6 +38,7 @@ app.use(session({
     store: MongoStore.create({ mongoUrl: process.env.MONGO_URI + "_sessions" })
 }));
 
+app.use(compression()); //para comprimir las respuestas
 app.use( favicon(__dirname + "/public/resources/icon.ico") );
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
